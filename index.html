@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Operativo TMQ</title>
+
+<meta http-equiv="refresh" content="600">
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #0b1e2d;
+  color: white;
+}
+
+.header {
+  height: 60px;
+  background: #12344d;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.main {
+  display: flex;
+  height: calc(100vh - 100px);
+}
+
+.left {
+  width: 65%;
+  border-right: 2px solid #1f4e6b;
+}
+
+.right {
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+}
+
+.windy-map {
+  height: 70%;
+  border-bottom: 2px solid #1f4e6b;
+}
+
+.placeholder {
+  height: 30%;
+  background: #000;
+  position: relative;
+  border-top: 2px solid #1f4e6b;
+}
+
+/* WIDGET TURNOS */
+.turnos-box {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40%;
+  background: linear-gradient(145deg, rgba(20,40,60,0.95), rgba(10,20,30,0.95));
+  padding: 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+}
+
+/* título */
+.turnos-title {
+  font-weight: bold;
+  font-size: 15px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+}
+
+/* turno actual */
+.turno-actual {
+  text-align: center;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+}
+
+.turno-actual-label {
+  font-size: 11px;
+  opacity: 0.7;
+  letter-spacing: 1px;
+}
+
+.turno-actual-valor {
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+/* turno siguiente */
+.turno-siguiente {
+  text-align: center;
+  margin-top: 6px;
+  opacity: 0.5; /* 👈 opaco */
+}
+
+.turno-siguiente-label {
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.turno-siguiente-valor {
+  font-size: 16px;
+  margin-top: 3px;
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.footer {
+  height: 40px;
+  background: #12344d;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <div>📊 Dashboard: Operaciones Marítimas ENAP TMQ 📍 </div>
+  <div>⏱️ <span id="clock"></span></div>
+</div>
+
+<div class="main">
+
+  <div class="left">
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSwtuKhpOkPw1hfTRvhhFumIG_IGe3qbla5z1I9i5dRXNy7--u1gehkmhoNkzdVtg/pubhtml?gid=207743511&single=true"></iframe>
+  </div>
+
+  <div class="right">
+
+    <div class="windy-map">
+      <iframe src="https://embed.windy.com/embed2.html?lat=-32.774&lon=-71.496&zoom=16&level=surface&overlay=wind"></iframe>
+    </div>
+
+    <div class="placeholder">
+
+      <div class="turnos-box">
+        
+        <div class="turnos-title" id="turnosTitulo"></div>
+
+        <div class="turno-actual">
+          <div class="turno-actual-label">TURNO ACTUAL</div>
+          <div class="turno-actual-valor" id="turnoActual">--</div>
+        </div>
+
+        <div class="turno-siguiente">
+          <div class="turno-siguiente-label">TURNO SIGUIENTE</div>
+          <div class="turno-siguiente-valor" id="turnoSiguiente">--</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="footer">
+  🗓 Última actualización: <span id="lastUpdate"></span>
+</div>
+
+<script>
+// reloj
+function updateClock() {
+  const now = new Date();
+  document.getElementById("clock").innerText = now.toLocaleTimeString("es-CL");
+}
+setInterval(updateClock, 1000);
+
+// última actualización
+function updateLastUpdate() {
+  const now = new Date();
+
+  const formatted = now.toLocaleString("es-CL", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+
+  document.getElementById("lastUpdate").innerText = formatted;
+}
+
+// 🔥 lógica turnos
+function calcularTurnos(dia, noche) {
+  const now = new Date();
+  const hora = now.getHours();
+
+  let actual, siguiente;
+
+  if (hora >= 7 && hora < 19) {
+    actual = "DÍA – " + dia;
+    siguiente = "NOCHE – " + noche;
+  } else {
+    actual = "NOCHE – " + noche;
+    siguiente = "DÍA – " + dia;
+  }
+
+  return { actual, siguiente };
+}
+
+// 🔥 cargar JSON
+function cargarTurnos() {
+  fetch("https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/main/turnos.json?t=" + new Date().getTime())
+    .then(res => res.json())
+    .then(data => {
+
+      const turnos = calcularTurnos(data.dia, data.noche);
+
+      document.getElementById("turnoActual").innerText = turnos.actual;
+      document.getElementById("turnoSiguiente").innerText = turnos.siguiente;
+
+    })
+    .catch(() => {
+      document.getElementById("turnoActual").innerText = "Sin datos";
+      document.getElementById("turnoSiguiente").innerText = "--";
+    });
+}
+
+// título
+function actualizarTituloTurnos() {
+  const now = new Date();
+
+  const opciones = {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  };
+
+  let fecha = now.toLocaleDateString("es-CL", opciones);
+  fecha = fecha.charAt(0).toUpperCase() + fecha.slice(1);
+
+  document.getElementById("turnosTitulo").innerText = fecha;
+}
+
+// ejecutar
+updateClock();
+updateLastUpdate();
+actualizarTituloTurnos();
+cargarTurnos();
+
+// intervalos
+setInterval(updateLastUpdate, 600000);
+setInterval(cargarTurnos, 60000);
+
+</script>
+
+</body>
+</html>
