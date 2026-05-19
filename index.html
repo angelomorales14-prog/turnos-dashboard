@@ -21,38 +21,41 @@ body {
 ========================= */
 
 .header {
-  height: 95px;
+  height: 110px;
+
   background: linear-gradient(
     90deg,
-    #10293d 0%,
+    #0d2435 0%,
     #12344d 50%,
-    #10293d 100%
+    #0d2435 100%
   );
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding: 0 28px;
+  padding: 0 34px;
 
-  border-bottom: 2px solid rgba(64,196,255,0.25);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 
   box-shadow:
-    0 2px 12px rgba(0,0,0,0.45),
-    0 0 12px rgba(64,196,255,0.08);
+    0 4px 18px rgba(0,0,0,0.45),
+    0 0 12px rgba(64,196,255,0.04);
 }
 
 /* lado izquierdo */
 .header-left {
   display: flex;
   align-items: center;
-  gap: 18px;
 }
 
 /* logo */
 .logo {
-  height: 90px;
+  height: 96px;
   object-fit: contain;
+
+  filter:
+    drop-shadow(0 0 8px rgba(255,255,255,0.05));
 }
 
 /* títulos */
@@ -60,19 +63,31 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  margin-left: 24px;
 }
 
 .main-title {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 600;
-  letter-spacing: 0.5px;
+
+  letter-spacing: 0.3px;
+
+  color: rgba(255,255,255,0.96);
+
+  line-height: 1.1;
 }
 
 .sub-title {
-  font-size: 14px;
-  opacity: 0.75;
-  margin-top: 3px;
-  letter-spacing: 1px;
+  font-size: 13px;
+
+  margin-top: 7px;
+
+  letter-spacing: 1.8px;
+
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.58);
 }
 
 /* reloj */
@@ -81,16 +96,27 @@ body {
 }
 
 .clock {
-  font-size: 34px;
-  font-weight: 600;
+  font-size: 52px;
+
+  font-weight: 500;
+
+  letter-spacing: 1px;
+
   line-height: 1;
+
+  color: rgba(255,255,255,0.92);
+
+  font-variant-numeric: tabular-nums;
 }
 
 .date {
   font-size: 14px;
-  opacity: 0.75;
-  margin-top: 6px;
-  letter-spacing: 0.5px;
+
+  margin-top: 8px;
+
+  letter-spacing: 0.7px;
+
+  color: rgba(255,255,255,0.50);
 }
 
 /* =========================
@@ -99,7 +125,7 @@ body {
 
 .main {
   display: flex;
-  height: calc(100vh - 135px);
+  height: calc(100vh - 150px);
 }
 
 .left {
@@ -266,13 +292,15 @@ iframe {
 
     <!-- TÍTULOS -->
     <div class="header-titles">
+
       <div class="main-title">
-        Centro de Operaciones Marítimas
+        División de Operaciones Marítimas
       </div>
 
       <div class="sub-title">
         TERMINAL MARÍTIMO QUINTERO
       </div>
+
     </div>
 
   </div>
