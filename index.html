@@ -125,7 +125,7 @@ body {
 
 .main {
   display: flex;
-  height: calc(100vh - 150px);
+  height: calc(100vh - 130px);
 }
 
 .left {
@@ -270,6 +270,61 @@ iframe {
   opacity: 0.75;
 }
 
+/* =========================
+   BOTÓN FULLSCREEN
+========================= */
+
+.fullscreen-btn {
+
+  position: absolute;
+
+  bottom: 14px;
+  right: 14px;
+
+  width: 52px;
+  height: 52px;
+
+  border: none;
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(18,52,77,0.95),
+      rgba(8,18,28,0.95)
+    );
+
+  color: rgba(255,255,255,0.92);
+
+  font-size: 22px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,0.45),
+    0 0 10px rgba(64,196,255,0.08);
+
+  border: 1px solid rgba(255,255,255,0.05);
+
+  transition: all 0.2s ease;
+}
+
+.fullscreen-btn:hover {
+
+  transform: scale(1.05);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(24,70,105,0.98),
+      rgba(10,24,36,0.98)
+    );
+}
+
 </style>
 </head>
 
@@ -375,6 +430,15 @@ iframe {
         </div>
 
       </div>
+
+      <!-- BOTÓN FULLSCREEN -->
+      <button
+        class="fullscreen-btn"
+        onclick="toggleFullscreen()"
+        title="Pantalla completa"
+      >
+        ⛶
+      </button>
 
     </div>
 
@@ -549,6 +613,24 @@ function actualizarTituloTurnos() {
 
   document.getElementById("turnosTitulo").innerText =
     "TURNOS – " + fecha;
+
+}
+
+/* =========================
+   FULLSCREEN
+========================= */
+
+function toggleFullscreen() {
+
+  if (!document.fullscreenElement) {
+
+    document.documentElement.requestFullscreen();
+
+  } else {
+
+    document.exitFullscreen();
+
+  }
 
 }
 
