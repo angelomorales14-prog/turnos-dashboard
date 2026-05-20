@@ -148,18 +148,19 @@ body {
   height: 30%;
   background: #000;
   position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* =========================
-   PANEL TURNOS
+   KPI PANEL
 ========================= */
 
-.turnos-box {
-  position: absolute;
-  top: 14px;
-  right: 14px;
+.kpi-box {
 
-  width: 40%;
+  width: 72%;
 
   background:
     linear-gradient(
@@ -168,9 +169,11 @@ body {
       rgba(8,18,28,0.96)
     );
 
-  padding: 18px;
+  border-radius: 22px;
 
-  border-radius: 18px;
+  padding: 34px;
+
+  text-align: center;
 
   box-shadow:
     0 10px 30px rgba(0,0,0,0.65),
@@ -181,65 +184,39 @@ body {
   backdrop-filter: blur(8px);
 }
 
-/* título */
-.turnos-title {
-  font-size: 14px;
-  font-weight: 600;
+.kpi-title {
 
-  text-align: center;
+  font-size: 15px;
 
-  padding-bottom: 10px;
-  margin-bottom: 14px;
-
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-
-  opacity: 0.92;
-
-  letter-spacing: 0.5px;
-}
-
-/* turno actual */
-.turno-actual {
-  text-align: center;
-
-  padding: 14px;
-
-  border-radius: 14px;
-
-  background: rgba(255,255,255,0.04);
-
-  margin-bottom: 14px;
-}
-
-.turno-actual-label {
-  font-size: 11px;
-  opacity: 0.55;
   letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.55);
+
+  margin-bottom: 18px;
 }
 
-.turno-actual-valor {
-  font-size: 26px;
+.kpi-main {
+
+  font-size: 32px;
+
   font-weight: 700;
 
-  margin-top: 8px;
+  letter-spacing: 1px;
+
+  color: rgba(255,255,255,0.95);
+}
+
+.kpi-sub {
+
+  margin-top: 14px;
+
+  font-size: 15px;
+
+  color: rgba(255,255,255,0.42);
 
   letter-spacing: 1px;
-}
-
-/* turno siguiente */
-.turno-siguiente {
-  text-align: center;
-  opacity: 0.42;
-}
-
-.turno-siguiente-label {
-  font-size: 11px;
-  letter-spacing: 2px;
-}
-
-.turno-siguiente-valor {
-  font-size: 17px;
-  margin-top: 5px;
 }
 
 /* iframe */
@@ -338,14 +315,12 @@ iframe {
 
   <div class="header-left">
 
-    <!-- LOGO -->
     <img
       class="logo"
       src="logo-enap.png"
       alt="ENAP TMQ"
     >
 
-    <!-- TÍTULOS -->
     <div class="header-titles">
 
       <div class="main-title">
@@ -398,35 +373,21 @@ iframe {
 
     </div>
 
-    <!-- PANEL INFERIOR -->
+    <!-- KPI -->
     <div class="placeholder">
 
-      <div class="turnos-box">
+      <div class="kpi-box">
 
-        <div class="turnos-title" id="turnosTitulo"></div>
-
-        <div class="turno-actual">
-
-          <div class="turno-actual-label">
-            TURNO ACTUAL
-          </div>
-
-          <div class="turno-actual-valor" id="turnoActual">
-            --
-          </div>
-
+        <div class="kpi-title">
+          KPI´s P7
         </div>
 
-        <div class="turno-siguiente">
+        <div class="kpi-main">
+          EN DESARROLLO
+        </div>
 
-          <div class="turno-siguiente-label">
-            TURNO SIGUIENTE
-          </div>
-
-          <div class="turno-siguiente-valor" id="turnoSiguiente">
-            --
-          </div>
-
+        <div class="kpi-sub">
+          Próximamente indicadores operacionales semanales
         </div>
 
       </div>
@@ -522,101 +483,6 @@ function updateLastUpdate() {
 }
 
 /* =========================
-   TURNOS
-========================= */
-
-function calcularTurnos(dia, noche) {
-
-  const now = new Date();
-  const hora = now.getHours();
-
-  let actual;
-  let siguiente;
-
-  if (hora >= 7 && hora < 19) {
-
-    actual = "DÍA – " + dia;
-    siguiente = "NOCHE – " + noche;
-
-  } else {
-
-    actual = "NOCHE – " + noche;
-    siguiente = "DÍA – " + dia;
-
-  }
-
-  return {
-    actual,
-    siguiente
-  };
-
-}
-
-/* =========================
-   CARGAR TURNOS
-========================= */
-
-function cargarTurnos() {
-
-  fetch(
-    "https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/main/turnos.json?t=" +
-    new Date().getTime()
-  )
-
-  .then(res => res.json())
-
-  .then(data => {
-
-    const turnos =
-      calcularTurnos(data.dia, data.noche);
-
-    document.getElementById("turnoActual").innerText =
-      turnos.actual;
-
-    document.getElementById("turnoSiguiente").innerText =
-      turnos.siguiente;
-
-  })
-
-  .catch(() => {
-
-    document.getElementById("turnoActual").innerText =
-      "Sin datos";
-
-    document.getElementById("turnoSiguiente").innerText =
-      "--";
-
-  });
-
-}
-
-/* =========================
-   TÍTULO TURNOS
-========================= */
-
-function actualizarTituloTurnos() {
-
-  const now = new Date();
-
-  const opciones = {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  };
-
-  let fecha =
-    now.toLocaleDateString("es-CL", opciones);
-
-  fecha =
-    fecha.charAt(0).toUpperCase() + fecha.slice(1);
-
-  document.getElementById("turnosTitulo").innerText =
-    "TURNOS – " + fecha;
-
-}
-
-/* =========================
    FULLSCREEN
 ========================= */
 
@@ -641,13 +507,10 @@ function toggleFullscreen() {
 updateClock();
 updateLastUpdate();
 actualizarFechaHeader();
-actualizarTituloTurnos();
-cargarTurnos();
 
 /* intervalos */
 
 setInterval(updateLastUpdate, 600000);
-setInterval(cargarTurnos, 60000);
 
 </script>
 
