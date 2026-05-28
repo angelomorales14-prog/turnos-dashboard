@@ -160,9 +160,9 @@ body {
 
   position: relative;
 
-  display: flex;
-  flex-direction: column;
+  overflow: hidden;
 
+  display: flex;
   align-items: center;
   justify-content: center;
 
@@ -174,39 +174,85 @@ body {
     );
 }
 
-.kpi-title {
+.kpi-container {
 
-  font-size: 16px;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  animation: fadeIn 0.8s ease;
+}
+
+.kpi-header {
+
+  font-size: 14px;
 
   letter-spacing: 4px;
 
   text-transform: uppercase;
 
-  color: rgba(255,255,255,0.48);
+  color: rgba(255,255,255,0.45);
 
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 
-.kpi-main {
+.kpi-value {
 
-  font-size: 42px;
+  font-size: 72px;
 
   font-weight: 700;
 
-  letter-spacing: 1px;
+  line-height: 1;
 
   color: rgba(255,255,255,0.96);
 }
 
-.kpi-sub {
+.kpi-name {
 
-  margin-top: 16px;
+  margin-top: 18px;
+
+  font-size: 24px;
+
+  font-weight: 600;
+
+  letter-spacing: 1px;
+
+  color: rgba(255,255,255,0.88);
+}
+
+.kpi-period {
+
+  margin-top: 12px;
 
   font-size: 15px;
 
   color: rgba(255,255,255,0.38);
 
   letter-spacing: 1px;
+}
+
+@keyframes fadeIn {
+
+  from {
+
+    opacity: 0;
+    transform: translateY(10px);
+
+  }
+
+  to {
+
+    opacity: 1;
+    transform: translateY(0);
+
+  }
 }
 
 /* iframe */
@@ -376,16 +422,24 @@ iframe {
 
     <div class="placeholder">
 
-      <div class="kpi-title">
-        KPI´s P7
-      </div>
+      <div class="kpi-container">
 
-      <div class="kpi-main">
-        EN DESARROLLO
-      </div>
+        <div class="kpi-header">
+          KPI OPERACIONAL
+        </div>
 
-      <div class="kpi-sub">
-        Próximamente indicadores operacionales semanales
+        <div class="kpi-value" id="kpiValor">
+          --
+        </div>
+
+        <div class="kpi-name" id="kpiNombre">
+          CARGANDO...
+        </div>
+
+        <div class="kpi-period" id="kpiPeriodo">
+          --
+        </div>
+
       </div>
 
       <!-- FULLSCREEN -->
@@ -498,12 +552,72 @@ function toggleFullscreen() {
 }
 
 /* =========================
+   KPI ROTATIVO
+========================= */
+
+const kpiURL =
+"https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/refs/heads/main/kpis.json";
+
+let kpis = [];
+let kpiIndex = 0;
+
+async function cargarKPIs() {
+
+  try {
+
+    const response = await fetch(kpiURL);
+
+    kpis = await response.json();
+
+    mostrarKPI();
+
+    setInterval(rotarKPI, 30000);
+
+  } catch (error) {
+
+    document.getElementById("kpiNombre").innerText =
+      "ERROR KPI";
+
+    console.error(error);
+  }
+}
+
+function mostrarKPI() {
+
+  if (kpis.length === 0) return;
+
+  const kpi = kpis[kpiIndex];
+
+  document.getElementById("kpiValor").innerText =
+    kpi.valor;
+
+  document.getElementById("kpiNombre").innerText =
+    kpi.nombre;
+
+  document.getElementById("kpiPeriodo").innerText =
+    kpi.periodo;
+}
+
+function rotarKPI() {
+
+  kpiIndex++;
+
+  if (kpiIndex >= kpis.length) {
+
+    kpiIndex = 0;
+  }
+
+  mostrarKPI();
+}
+
+/* =========================
    EJECUTAR
 ========================= */
 
 updateClock();
 updateLastUpdate();
 actualizarFechaHeader();
+cargarKPIs();
 
 /* intervalos */
 
