@@ -43,14 +43,10 @@ body {
     0 0 12px rgba(64,196,255,0.04);
 }
 
-/* lado izquierdo */
-
 .header-left {
   display: flex;
   align-items: center;
 }
-
-/* logo */
 
 .logo {
   height: 96px;
@@ -59,8 +55,6 @@ body {
   filter:
     drop-shadow(0 0 8px rgba(255,255,255,0.05));
 }
-
-/* títulos */
 
 .header-titles {
   display: flex;
@@ -143,7 +137,9 @@ body {
   flex-direction: column;
 }
 
-/* mapa */
+/* =========================
+   MAPA
+========================= */
 
 .windy-map {
   height: 70%;
@@ -174,7 +170,63 @@ body {
     );
 }
 
+/* glow */
+
+.placeholder::before {
+
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+  height: 420px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(64,196,255,0.12),
+      transparent 70%
+    );
+
+  filter: blur(30px);
+
+  animation: pulseGlow 6s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+}
+
 .kpi-container {
+
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kpi-card {
+
+  position: absolute;
 
   width: 100%;
   height: 100%;
@@ -185,74 +237,105 @@ body {
   align-items: center;
   justify-content: center;
 
-  text-align: center;
+  opacity: 0;
 
-  animation: fadeIn 0.8s ease;
+  transform: translateY(12px);
+
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
 }
 
-.kpi-header {
+.kpi-card.active {
+
+  opacity: 1;
+
+  transform: translateY(0);
+}
+
+.kpi-title {
 
   font-size: 14px;
 
-  letter-spacing: 4px;
+  letter-spacing: 5px;
 
   text-transform: uppercase;
 
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.42);
 
   margin-bottom: 18px;
 }
 
-.kpi-value {
+.kpi-main {
 
-  font-size: 72px;
+  font-size: 58px;
 
   font-weight: 700;
 
   line-height: 1;
 
   color: rgba(255,255,255,0.96);
+
+  text-shadow:
+    0 0 18px rgba(64,196,255,0.10);
 }
 
-.kpi-name {
+.kpi-sub {
 
-  margin-top: 18px;
+  margin-top: 16px;
 
-  font-size: 24px;
-
-  font-weight: 600;
+  font-size: 18px;
 
   letter-spacing: 1px;
 
-  color: rgba(255,255,255,0.88);
+  color: rgba(255,255,255,0.60);
 }
 
 .kpi-period {
 
-  margin-top: 12px;
+  margin-top: 10px;
 
-  font-size: 15px;
+  font-size: 13px;
 
-  color: rgba(255,255,255,0.38);
+  letter-spacing: 2px;
 
-  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.35);
 }
 
-@keyframes fadeIn {
+/* indicador */
 
-  from {
+.kpi-indicator {
 
-    opacity: 0;
-    transform: translateY(10px);
+  position: absolute;
 
-  }
+  bottom: 18px;
 
-  to {
+  display: flex;
+  gap: 10px;
 
-    opacity: 1;
-    transform: translateY(0);
+  z-index: 5;
+}
 
-  }
+.dot {
+
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.18);
+
+  transition: all 0.4s ease;
+}
+
+.dot.active {
+
+  background: rgba(64,196,255,0.95);
+
+  box-shadow:
+    0 0 12px rgba(64,196,255,0.55);
 }
 
 /* iframe */
@@ -325,6 +408,8 @@ iframe {
   border: 1px solid rgba(255,255,255,0.05);
 
   transition: all 0.2s ease;
+
+  z-index: 20;
 }
 
 .fullscreen-btn:hover {
@@ -339,14 +424,48 @@ iframe {
     );
 }
 
+/* responsive */
+
+@media (max-width: 900px) {
+
+  .main {
+    flex-direction: column;
+  }
+
+  .left,
+  .right {
+    width: 100%;
+  }
+
+  .left {
+    height: 60%;
+  }
+
+  .right {
+    height: 40%;
+  }
+
+  .header-titles {
+    margin-left: 20px;
+  }
+
+  .main-title {
+    font-size: 22px;
+  }
+
+  .kpi-main {
+    font-size: 42px;
+  }
+
+  .kpi-sub {
+    font-size: 15px;
+  }
+}
+
 </style>
 </head>
 
 <body>
-
-<!-- =========================
-     HEADER
-========================= -->
 
 <div class="header">
 
@@ -372,8 +491,6 @@ iframe {
 
   </div>
 
-  <!-- RELOJ -->
-
   <div class="header-right">
 
     <div class="clock" id="clock">
@@ -388,13 +505,7 @@ iframe {
 
 </div>
 
-<!-- =========================
-     MAIN
-========================= -->
-
 <div class="main">
-
-  <!-- PLANIFICACIÓN -->
 
   <div class="left">
 
@@ -404,11 +515,7 @@ iframe {
 
   </div>
 
-  <!-- PANEL DERECHO -->
-
   <div class="right">
-
-    <!-- MAPA -->
 
     <div class="windy-map">
 
@@ -418,31 +525,72 @@ iframe {
 
     </div>
 
-    <!-- KPI PANEL -->
+    <!-- KPI -->
 
     <div class="placeholder">
 
       <div class="kpi-container">
 
-        <div class="kpi-header">
-          KPI OPERACIONAL
+        <!-- KPI 1 -->
+
+        <div class="kpi-card active">
+
+          <div class="kpi-title">
+            KPI OPERACIONAL
+          </div>
+
+          <div
+            class="kpi-main"
+            id="kpiVolumen">
+            --
+          </div>
+
+          <div class="kpi-sub">
+            % Cumplimiento Volúmen
+          </div>
+
+          <div
+            class="kpi-period"
+            id="periodoVolumen">
+            --
+          </div>
+
         </div>
 
-        <div class="kpi-value" id="kpiValor">
-          --
-        </div>
+        <!-- KPI 2 -->
 
-        <div class="kpi-name" id="kpiNombre">
-          CARGANDO...
-        </div>
+        <div class="kpi-card">
 
-        <div class="kpi-period" id="kpiPeriodo">
-          --
+          <div class="kpi-title">
+            KPI OPERACIONAL
+          </div>
+
+          <div
+            class="kpi-main"
+            id="kpiFaenas">
+            --
+          </div>
+
+          <div class="kpi-sub">
+            % Cumplimiento Faenas
+          </div>
+
+          <div
+            class="kpi-period"
+            id="periodoFaenas">
+            --
+          </div>
+
         </div>
 
       </div>
 
-      <!-- FULLSCREEN -->
+      <div class="kpi-indicator">
+
+        <div class="dot active"></div>
+        <div class="dot"></div>
+
+      </div>
 
       <button
         class="fullscreen-btn"
@@ -457,10 +605,6 @@ iframe {
   </div>
 
 </div>
-
-<!-- =========================
-     FOOTER
-========================= -->
 
 <div class="footer">
 
@@ -488,7 +632,7 @@ function updateClock() {
 setInterval(updateClock, 1000);
 
 /* =========================
-   FECHA HEADER
+   FECHA
 ========================= */
 
 function actualizarFechaHeader() {
@@ -552,74 +696,94 @@ function toggleFullscreen() {
 }
 
 /* =========================
-   KPI ROTATIVO
+   KPI DATA
 ========================= */
 
-const kpiURL =
-"https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/refs/heads/main/kpis.json";
+fetch(
+  "https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/main/kpis.json?t=" +
+  new Date().getTime()
+)
 
-let kpis = [];
-let kpiIndex = 0;
+.then(response => response.json())
 
-async function cargarKPIs() {
+.then(data => {
 
-  try {
+  const volumen =
+    data.find(
+      item =>
+      item.nombre === "% Cumplimiento Volúmen"
+    );
 
-    const response = await fetch(kpiURL);
+  const faenas =
+    data.find(
+      item =>
+      item.nombre === "% Cumplimiento Faenas"
+    );
 
-    kpis = await response.json();
+  if (volumen) {
 
-    mostrarKPI();
+    document.getElementById("kpiVolumen").innerText =
+      volumen.valor + "%";
 
-    setInterval(rotarKPI, 30000);
-
-  } catch (error) {
-
-    document.getElementById("kpiNombre").innerText =
-      "ERROR KPI";
-
-    console.error(error);
-  }
-}
-
-function mostrarKPI() {
-
-  if (kpis.length === 0) return;
-
-  const kpi = kpis[kpiIndex];
-
-  document.getElementById("kpiValor").innerText =
-    kpi.valor;
-
-  document.getElementById("kpiNombre").innerText =
-    kpi.nombre;
-
-  document.getElementById("kpiPeriodo").innerText =
-    kpi.periodo;
-}
-
-function rotarKPI() {
-
-  kpiIndex++;
-
-  if (kpiIndex >= kpis.length) {
-
-    kpiIndex = 0;
+    document.getElementById("periodoVolumen").innerText =
+      volumen.periodo;
   }
 
-  mostrarKPI();
-}
+  if (faenas) {
+
+    document.getElementById("kpiFaenas").innerText =
+      faenas.valor + "%";
+
+    document.getElementById("periodoFaenas").innerText =
+      faenas.periodo;
+  }
+
+})
+
+.catch(error => {
+
+  console.error(error);
+
+  document.getElementById("kpiVolumen").innerText =
+    "ERROR";
+
+  document.getElementById("kpiFaenas").innerText =
+    "ERROR";
+
+});
 
 /* =========================
-   EJECUTAR
+   ROTACIÓN KPI
+========================= */
+
+const cards =
+  document.querySelectorAll(".kpi-card");
+
+const dots =
+  document.querySelectorAll(".dot");
+
+let current = 0;
+
+setInterval(() => {
+
+  cards[current].classList.remove("active");
+  dots[current].classList.remove("active");
+
+  current =
+    (current + 1) % cards.length;
+
+  cards[current].classList.add("active");
+  dots[current].classList.add("active");
+
+}, 30000);
+
+/* =========================
+   INICIO
 ========================= */
 
 updateClock();
 updateLastUpdate();
 actualizarFechaHeader();
-cargarKPIs();
-
-/* intervalos */
 
 setInterval(updateLastUpdate, 600000);
 
