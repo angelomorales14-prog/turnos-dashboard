@@ -1,13 +1,12 @@
-{
-  "periodo": "P7 20 MAY 2026",
-
-  "volumen": 100,
-  "volumenAnterior": 88,
-  "programadoVolumen": 240683,
-  "realVolumen": 240683,
-
-  "faenas": 35,
-  "faenasAnterior": 42,
-  "programadoFaenas": 17,
-  "realFaenas": 6
-}
+[
+  {
+    "nombre": "% Cumplimiento Volúmen",
+    "valor": 87,
+    "periodo": "Semana 22"
+  },
+  {
+    "nombre": "% Cumplimiento Faenas",
+    "valor": 94,
+    "periodo": "Semana 22"
+  }
+]
