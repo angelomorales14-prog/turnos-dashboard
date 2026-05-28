@@ -238,7 +238,6 @@ body {
 
   display: flex;
 
-  justify-content: space-between;
   align-items: center;
 
   opacity: 0;
@@ -264,6 +263,8 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  width: 100%;
 }
 
 .kpi-main {
@@ -304,46 +305,6 @@ body {
   color: rgba(255,255,255,0.32);
 }
 
-/* derecha */
-
-.kpi-right {
-
-  text-align: right;
-
-  min-width: 180px;
-}
-
-.kpi-trend-label {
-
-  font-size: 10px;
-
-  letter-spacing: 2px;
-
-  text-transform: uppercase;
-
-  color: rgba(255,255,255,0.34);
-}
-
-.kpi-trend {
-
-  margin-top: 10px;
-
-  font-size: 34px;
-
-  font-weight: 700;
-
-  color: #ff5d5d;
-}
-
-.kpi-trend-sub {
-
-  margin-top: 6px;
-
-  font-size: 12px;
-
-  color: rgba(255,255,255,0.45);
-}
-
 /* barra */
 
 .kpi-bottom {
@@ -351,7 +312,7 @@ body {
   position: absolute;
 
   left: 70px;
-  right: 90px;
+  right: 70px;
   bottom: 22px;
 }
 
@@ -384,18 +345,8 @@ body {
 
   box-shadow:
     0 0 14px rgba(41,211,255,0.45);
-}
 
-.kpi-meta {
-
-  margin-top: 8px;
-
-  display: flex;
-  justify-content: flex-end;
-
-  font-size: 12px;
-
-  color: rgba(255,255,255,0.48);
+  transition: width 1s ease;
 }
 
 /* indicadores */
@@ -558,13 +509,9 @@ iframe {
       55px;
   }
 
-  .kpi-right {
-    display: none;
-  }
-
   .kpi-bottom {
     left: 55px;
-    right: 80px;
+    right: 55px;
   }
 }
 
@@ -661,22 +608,6 @@ iframe {
 
           </div>
 
-          <div class="kpi-right">
-
-            <div class="kpi-trend-label">
-              Tendencia vs Anterior
-            </div>
-
-            <div class="kpi-trend">
-              -8%
-            </div>
-
-            <div class="kpi-trend-sub">
-              Periodo anterior: 42%
-            </div>
-
-          </div>
-
           <div class="kpi-bottom">
 
             <div class="kpi-progress-bg">
@@ -686,10 +617,6 @@ iframe {
                 id="progressVolumen">
               </div>
 
-            </div>
-
-            <div class="kpi-meta">
-              KPI Operacional
             </div>
 
           </div>
@@ -720,22 +647,6 @@ iframe {
 
           </div>
 
-          <div class="kpi-right">
-
-            <div class="kpi-trend-label">
-              Tendencia vs Anterior
-            </div>
-
-            <div class="kpi-trend">
-              -8%
-            </div>
-
-            <div class="kpi-trend-sub">
-              Periodo anterior: 42%
-            </div>
-
-          </div>
-
           <div class="kpi-bottom">
 
             <div class="kpi-progress-bg">
@@ -745,10 +656,6 @@ iframe {
                 id="progressFaenas">
               </div>
 
-            </div>
-
-            <div class="kpi-meta">
-              KPI Operacional
             </div>
 
           </div>
@@ -884,41 +791,47 @@ fetch(
 
 .then(data => {
 
-  const volumen =
-    data.find(
-      item =>
-      item.nombre === "% Cumplimiento Volúmen"
-    );
+  function cargarKPI(nombreKPI, ids) {
 
-  const faenas =
-    data.find(
-      item =>
-      item.nombre === "% Cumplimiento Faenas"
-    );
+    const registro =
+      data.find(
+        item => item.nombre === nombreKPI
+      );
 
-  if (volumen) {
+    if (!registro) {
+      return;
+    }
 
-    document.getElementById("kpiVolumen").innerText =
-      volumen.valor + "%";
+    const valor =
+      Number(registro.valor);
 
-    document.getElementById("periodoVolumen").innerText =
-      volumen.periodo;
+    document.getElementById(ids.valor).innerText =
+      valor + "%";
 
-    document.getElementById("progressVolumen").style.width =
-      volumen.valor + "%";
+    document.getElementById(ids.periodo).innerText =
+      registro.periodo;
+
+    document.getElementById(ids.progress).style.width =
+      valor + "%";
   }
 
-  if (faenas) {
+  cargarKPI(
+    "% Cumplimiento Volúmen",
+    {
+      valor: "kpiVolumen",
+      periodo: "periodoVolumen",
+      progress: "progressVolumen"
+    }
+  );
 
-    document.getElementById("kpiFaenas").innerText =
-      faenas.valor + "%";
-
-    document.getElementById("periodoFaenas").innerText =
-      faenas.periodo;
-
-    document.getElementById("progressFaenas").style.width =
-      faenas.valor + "%";
-  }
+  cargarKPI(
+    "% Cumplimiento Faenas",
+    {
+      valor: "kpiFaenas",
+      periodo: "periodoFaenas",
+      progress: "progressFaenas"
+    }
+  );
 
 })
 
