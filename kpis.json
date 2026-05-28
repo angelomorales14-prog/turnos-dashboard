@@ -1,12 +1,12 @@
 [
   {
-    "nombre": "CUMPLIMIENTO VOLÚMEN",
-    "valor": "100%",
-    "periodo": "20 MAY - 27 MAY"
+    "nombre": "% Cumplimiento Volúmen",
+    "valor": 100,
+    "periodo": "P7 20 MAY 2026"
   },
   {
-    "nombre": "CUMPLIMIENTO FAENAS",
-    "valor": "35%",
-    "periodo": "20 MAY - 27 MAY"
+    "nombre": "% Cumplimiento Faenas",
+    "valor": 35,
+    "periodo": "P7 20 MAY 2026"
   }
 ]
