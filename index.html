@@ -223,30 +223,22 @@ body {
   width: 100%;
   height: 100%;
 }
-
 .kpi-card {
 
   position: absolute;
-
   inset: 0;
 
-  padding:
-    24px
-    38px
-    24px
-    70px;
-
   display: flex;
-
+  justify-content: center;
   align-items: center;
 
   opacity: 0;
 
-  transform: translateY(10px);
+  transform: translateY(15px);
 
   transition:
-    opacity 0.8s ease,
-    transform 0.8s ease;
+    opacity .8s ease,
+    transform .8s ease;
 }
 
 .kpi-card.active {
@@ -258,7 +250,9 @@ body {
 
 /* izquierda */
 
-.kpi-left {
+.kpi-content {
+
+  width: 90%;
 
   display: flex;
   flex-direction: column;
@@ -267,8 +261,22 @@ body {
   align-items: center;
 
   text-align: center;
+}
 
-  width: 100%;
+.kpi-icon {
+
+  font-size: clamp(
+    34px,
+    2vw,
+    50px
+  );
+
+  color: #29d3ff;
+
+  margin-bottom: 10px;
+
+  text-shadow:
+    0 0 25px rgba(41,211,255,.5);
 }
 
 .kpi-main {
@@ -276,64 +284,83 @@ body {
   font-size: clamp(
     70px,
     6vw,
-    110px
+    120px
   );
 
   font-weight: 700;
 
   line-height: 1;
 
-  color: rgba(255,255,255,0.98);
+  color: white;
 
   text-shadow:
-    0 0 24px rgba(64,196,255,0.18);
+    0 0 25px rgba(64,196,255,.25);
 }
 
 .kpi-sub {
 
-  margin-top: 10px;
+  margin-top: 8px;
 
-  font-size: 20px;
+  font-size: clamp(
+    18px,
+    1.4vw,
+    26px
+  );
 
-  font-weight: 500;
+  color: rgba(255,255,255,.88);
 
-  color: rgba(255,255,255,0.78);
-
-  letter-spacing: 1px;
+  letter-spacing: .5px;
 }
 
 .kpi-period {
 
-  margin-top: 14px;
+  margin-top: 10px;
 
-  font-size: 14px;
+  font-size: clamp(
+    11px,
+    .8vw,
+    15px
+  );
 
   letter-spacing: 3px;
 
   text-transform: uppercase;
 
-  color: rgba(255,255,255,0.50);
+  color: rgba(255,255,255,.45);
+}
+
+.kpi-label {
+
+  margin-top: 14px;
+
+  font-size: 11px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,.30);
 }
 
 /* barra */
 
 .kpi-bottom {
 
-  position: absolute;
+  width: 85%;
 
-  left: 40px;
-  right: 40px;
-  bottom: 28px;
+  margin-top: 18px;
 }
 
 .kpi-progress-bg {
 
   width: 100%;
+
   height: 12px;
 
   border-radius: 999px;
 
-  background: rgba(255,255,255,0.10);
+  background:
+    rgba(255,255,255,.08);
 
   overflow: hidden;
 }
@@ -349,14 +376,53 @@ body {
   background:
     linear-gradient(
       90deg,
-      #1da1ff,
+      #00aaff,
       #29d3ff
     );
 
   box-shadow:
-    0 0 18px rgba(41,211,255,0.55);
+    0 0 18px rgba(41,211,255,.55);
 
-  transition: width 1s ease;
+  transition:
+    width 1s ease;
+}
+
+.kpi-content {
+
+  width: 90%;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.kpi-icon {
+
+  font-size: 42px;
+
+  margin-bottom: 12px;
+
+  color: #29d3ff;
+
+  text-shadow:
+    0 0 25px rgba(41,211,255,.5);
+}
+
+.kpi-label {
+
+  margin-top: 12px;
+
+  font-size: 12px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,.35);
 }
 
 /* indicadores */
@@ -590,110 +656,123 @@ iframe {
 
     <!-- KPI -->
 
-    <div class="placeholder">
+   <div class="placeholder">
 
-      <div class="kpi-container">
+  <div class="kpi-container">
 
-        <!-- KPI 1 -->
+    <!-- KPI 1 -->
 
-        <div class="kpi-card active">
+    <div class="kpi-card active">
 
-          <div class="kpi-left">
+      <div class="kpi-content">
+
+        <div class="kpi-icon">💧</div>
+
+        <div
+          class="kpi-main"
+          id="kpiVolumen">
+          --
+        </div>
+
+        <div class="kpi-sub">
+          % Cumplimiento Volúmen
+        </div>
+
+        <div
+          class="kpi-period"
+          id="periodoVolumen">
+          --
+        </div>
+
+        <div class="kpi-bottom">
+
+          <div class="kpi-progress-bg">
 
             <div
-              class="kpi-main"
-              id="kpiVolumen">
-              --
-            </div>
-
-            <div class="kpi-sub">
-              % Cumplimiento Volúmen
-            </div>
-
-            <div
-              class="kpi-period"
-              id="periodoVolumen">
-              --
-            </div>
-
-          </div>
-
-          <div class="kpi-bottom">
-
-            <div class="kpi-progress-bg">
-
-              <div
-                class="kpi-progress-fill"
-                id="progressVolumen">
-              </div>
-
+              class="kpi-progress-fill"
+              id="progressVolumen">
             </div>
 
           </div>
 
         </div>
 
-        <!-- KPI 2 -->
-
-        <div class="kpi-card">
-
-          <div class="kpi-left">
-
-            <div
-              class="kpi-main"
-              id="kpiFaenas">
-              --
-            </div>
-
-            <div class="kpi-sub">
-              % Cumplimiento Faenas
-            </div>
-
-            <div
-              class="kpi-period"
-              id="periodoFaenas">
-              --
-            </div>
-
-          </div>
-
-          <div class="kpi-bottom">
-
-            <div class="kpi-progress-bg">
-
-              <div
-                class="kpi-progress-fill"
-                id="progressFaenas">
-              </div>
-
-            </div>
-
-          </div>
-
+        <div class="kpi-label">
+          Indicador Operacional
         </div>
 
       </div>
-
-      <!-- indicadores -->
-
-      <div class="kpi-indicator">
-
-        <div class="dot active"></div>
-        <div class="dot"></div>
-
-      </div>
-
-      <!-- fullscreen -->
-
-      <button
-        class="fullscreen-btn"
-        onclick="toggleFullscreen()"
-        title="Pantalla completa"
-      >
-        ⛶
-      </button>
 
     </div>
+
+    <!-- KPI 2 -->
+
+    <div class="kpi-card">
+
+      <div class="kpi-content">
+
+        <div class="kpi-icon">⚓</div>
+
+        <div
+          class="kpi-main"
+          id="kpiFaenas">
+          --
+        </div>
+
+        <div class="kpi-sub">
+          % Cumplimiento Faenas
+        </div>
+
+        <div
+          class="kpi-period"
+          id="periodoFaenas">
+          --
+        </div>
+
+        <div class="kpi-bottom">
+
+          <div class="kpi-progress-bg">
+
+            <div
+              class="kpi-progress-fill"
+              id="progressFaenas">
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="kpi-label">
+          Indicador Operacional
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Indicadores -->
+
+  <div class="kpi-indicator">
+
+    <div class="dot active"></div>
+    <div class="dot"></div>
+
+  </div>
+
+  <!-- Fullscreen -->
+
+  <button
+    class="fullscreen-btn"
+    onclick="toggleFullscreen()"
+    title="Pantalla completa">
+
+    ⛶
+
+  </button>
+
+</div>
 
   </div>
 
