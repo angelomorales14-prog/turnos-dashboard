@@ -151,11 +151,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 40px 0 50px; /* espacio para los dots a la izquierda */
   opacity: 0;
   transform: translateY(15px);
   transition: opacity .8s ease, transform .8s ease;
-  box-sizing: border-box;
 }
 
 .kpi-card.active {
@@ -198,7 +196,6 @@ body {
   font-size: 26px;
   color: rgba(255,255,255,.88);
   letter-spacing: .5px;
-  white-space: nowrap;
 }
 
 .kpi-period {
@@ -461,8 +458,8 @@ function escalarKPI() {
 
   if (!panel || !contents.length) return;
 
-  const panelW = panel.clientWidth;
-  const panelH = panel.clientHeight;
+  const panelW = panel.clientWidth * 0.95;
+  const panelH = panel.clientHeight * 0.95;
 
   contents.forEach(content => {
     // Reset temporal para medir tamaño natural
@@ -474,7 +471,7 @@ function escalarKPI() {
     const scaleX = (panelW * 0.88) / natW;
     const scaleY = (panelH * 0.88) / natH;
 
-    const scale = Math.min(scaleX, scaleY, 1.6); // tope 1.6x
+    const scale = Math.min(scaleX, scaleY, 2.3); // tope 2.3x
 
     content.style.transform = `scale(${scale})`;
     content.style.transformOrigin = "center center";
