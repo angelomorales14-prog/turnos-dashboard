@@ -289,7 +289,7 @@ body {
 
 .kpi-main {
 
-  font-size: clamp(50px, 8vw, 140px);
+  font-size: clamp(72px, 10vh, 160px);
 
   font-weight: 700;
 
@@ -305,11 +305,7 @@ body {
 
   margin-top: 8px;
 
-  font-size: clamp(
-    18px,
-    1.5vw,
-    28px
-  );
+  font-size: clamp(20px, 2.2vh, 32px);
 
   color: rgba(255,255,255,.88);
 
@@ -862,12 +858,7 @@ function ajustarDashboard() {
     );
 
   } else {
-
-    root.style.setProperty(
-      '--kpi-scale',
-      '0.85'
-    );
-
+    root.style.setProperty('--kpi-scale', '1');
   }
 }
 
