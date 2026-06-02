@@ -93,14 +93,16 @@ body {
 }
 
 .left {
-  width: 65%;
+  flex: 1.8;
   border-right: 2px solid rgba(255,255,255,0.05);
+  min-width: 0;
 }
 
 .right {
-  width: 35%;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .windy-map {
@@ -183,7 +185,7 @@ body {
 }
 
 .kpi-main {
-  font-size: 120px;
+  font-size: 140px;
   font-weight: 700;
   line-height: 1;
   color: white;
