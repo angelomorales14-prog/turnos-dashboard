@@ -156,6 +156,7 @@ body {
   opacity: 0;
   transform: translateY(15px);
   transition: opacity .8s ease, transform .8s ease;
+  text-align: center;
 }
 
 .kpi-card.active {
@@ -306,6 +307,137 @@ iframe {
   transform: scale(1.05);
 }
 
+/* =========================
+   CONDICIÓN DE PUERTO
+========================= */
+
+.left {
+  display: flex;
+  flex-direction: column;
+}
+
+.pan-frame {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.pan-frame iframe {
+  width: 100%;
+  height: calc(100% + 90px);
+  border: none;
+  position: absolute;
+  top: -40px;
+  left: 0;
+}
+
+.cpuerto-panel {
+  flex-shrink: 0;
+  height: 130px;
+  background: linear-gradient(180deg, #0d2d45, #0a1f30);
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cpuerto-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cpuerto-numero {
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.5px;
+}
+
+.cpuerto-condicion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #4fc3ff;
+  letter-spacing: 1.5px;
+}
+
+.cpuerto-condicion i {
+  font-size: 18px;
+}
+
+.cpuerto-fecha {
+  font-size: 13px;
+  color: rgba(255,255,255,.50);
+  letter-spacing: 0.3px;
+}
+
+.cpuerto-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.cpuerto-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px;
+  background: rgba(255,255,255,.04);
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.06);
+  gap: 6px;
+}
+
+.cpuerto-titulo {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,.45);
+  text-align: center;
+  line-height: 1.3;
+}
+
+.cpuerto-terminal-names {
+  font-size: 11px;
+  color: rgba(255,255,255,.70);
+  text-align: left;
+  line-height: 1.8;
+  width: 100%;
+  padding-left: 4px;
+}
+
+.cpuerto-badge {
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.cpuerto-badge.si {
+  background: rgba(12,157,36,0.25);
+  color: #56d364;
+  box-shadow: 0 0 10px rgba(86,211,100,.25);
+  border: 1px solid rgba(86,211,100,.3);
+}
+
+.cpuerto-badge.no {
+  background: rgba(207,18,18,0.25);
+  color: #ff6b6b;
+  box-shadow: 0 0 10px rgba(255,107,107,.25);
+  border: 1px solid rgba(255,107,107,.3);
+}
+
 @media (max-width: 900px) {
   .main { flex-direction: column; }
   .left, .right { width: 100%; }
@@ -337,7 +469,64 @@ iframe {
 <div class="main">
 
   <div class="left">
-    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQNCEzVo67ft-AfptQVmQf8y8_ttKPOwCySMtOPVPpxV2SfzzwvGlXm8U3HASVRpQ/pubhtml?gid=95097018&single=true&widget=false&headers=false&t=1"></iframe>
+
+    <div class="pan-frame">
+      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQOrO9g1yqrH9CG_UbDxxV-ezetTZHNo8DFT3gP9maLTYLciUTuOMHIzjphsoLG8Q/pubhtml?gid=1443371600&single=true&widget=false&headers=false&t=1"></iframe>
+    </div>
+
+    <!-- CONDICIÓN DE PUERTO -->
+    <div class="cpuerto-panel">
+
+      <div class="cpuerto-header">
+        <div class="cpuerto-numero" id="cpuertoNumero">CONDICIÓN DE PUERTO Nº --</div>
+        <div class="cpuerto-condicion">
+          <i class="fa-solid fa-water"></i>
+          <span id="cpuertoCondicion">--</span>
+        </div>
+        <div class="cpuerto-fecha">Emitida: <span id="cpuertoFecha">--</span></div>
+      </div>
+
+      <div class="cpuerto-grid">
+
+        <div class="cpuerto-item">
+          <div class="cpuerto-titulo">Amarre<br>LPG / BCZA / MTC</div>
+          <div class="cpuerto-badge" id="lpgAmarre">--</div>
+        </div>
+
+        <div class="cpuerto-item">
+          <div class="cpuerto-titulo">Desamarre<br>LPG / BCZA / MTC</div>
+          <div class="cpuerto-badge" id="lpgDesamarre">--</div>
+        </div>
+
+        <div class="cpuerto-item">
+          <div class="cpuerto-titulo">Amarre<br>Monoboya</div>
+          <div class="cpuerto-badge" id="monoboyaAmarre">--</div>
+        </div>
+
+        <div class="cpuerto-item">
+          <div class="cpuerto-titulo">Desamarre<br>Monoboya</div>
+          <div class="cpuerto-badge" id="monoboyaDesamarre">--</div>
+        </div>
+
+        <div class="cpuerto-item">
+          <div class="cpuerto-titulo">Embarque<br>Prácticos</div>
+          <div class="cpuerto-badge" id="practicos">--</div>
+        </div>
+
+        <div class="cpuerto-item">
+          <div class="cpuerto-titulo">Fondeo Naves<br>Extranjeras</div>
+          <div class="cpuerto-badge" id="fondeo">--</div>
+        </div>
+
+        <div class="cpuerto-item">
+          <div class="cpuerto-titulo">Buceo</div>
+          <div class="cpuerto-badge" id="buceo">--</div>
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
 
   <div class="right">
@@ -460,23 +649,28 @@ function escalarKPI() {
 
   if (!panel || !contents.length) return;
 
-  const panelW = panel.clientWidth * 0.95;
-  const panelH = panel.clientHeight * 0.95;
+  const panelW = panel.clientWidth;
+  const panelH = panel.clientHeight;
 
   contents.forEach(content => {
-    // Reset temporal para medir tamaño natural
+    // Reset para medir tamaño natural
     content.style.transform = "none";
+    content.style.marginLeft = "0";
 
     const natW = content.scrollWidth;
     const natH = content.scrollHeight;
 
-    const scaleX = (panelW * 0.88) / natW;
-    const scaleY = (panelH * 0.88) / natH;
+    const scaleX = (panelW * 0.85) / natW;
+    const scaleY = (panelH * 0.85) / natH;
 
-    const scale = Math.min(scaleX, scaleY, 2.3); // tope 2.3x
+    const scale = Math.min(scaleX, scaleY, 2.3);
 
+    // Forzar centrado explícito compatible con Tizen
+    content.style.transformOrigin = "50% 50%";
     content.style.transform = `scale(${scale})`;
-    content.style.transformOrigin = "center center";
+    content.style.position = "relative";
+    content.style.left = "0";
+    content.style.margin = "0 auto";
   });
 }
 
@@ -517,6 +711,52 @@ fetch(
   document.getElementById("kpiVolumen").innerText = "ERROR";
   document.getElementById("kpiFaenas").innerText = "ERROR";
   setTimeout(escalarKPI, 100);
+});
+
+/* =========================
+   CONDICIÓN DE PUERTO
+========================= */
+fetch(
+  "https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/main/cpuerto.json?t=" +
+  new Date().getTime()
+)
+.then(r => r.json())
+.then(data => {
+
+  document.getElementById("cpuertoNumero").innerText =
+    "CONDICIÓN DE PUERTO Nº " + data.numero;
+
+  document.getElementById("cpuertoCondicion").innerText =
+    data.condicion;
+
+  const fecha = data.fecha || null;
+  const fechaEl = document.getElementById("cpuertoFecha");
+  if (fecha) {
+    fechaEl.parentElement.style.display = "block";
+    fechaEl.innerText = fecha;
+  } else {
+    fechaEl.parentElement.style.display = "none";
+  }
+
+  function cargarBadge(id, valor) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerText = valor === "SI" ? "HABILITADO" : "NO HABILITADO";
+    el.classList.remove("si", "no");
+    el.classList.add(valor === "SI" ? "si" : "no");
+  }
+
+  cargarBadge("lpgAmarre",          data.lpg_amarre);
+  cargarBadge("lpgDesamarre",       data.lpg_desamarre);
+  cargarBadge("monoboyaAmarre",     data.monoboya_amarre);
+  cargarBadge("monoboyaDesamarre",  data.monoboya_desamarre);
+  cargarBadge("practicos",          data.practicos);
+  cargarBadge("fondeo",             data.fondeo);
+  cargarBadge("buceo",              data.buceo);
+
+})
+.catch(error => {
+  console.error("Error cargando cpuerto.json:", error);
 });
 
 /* =========================
