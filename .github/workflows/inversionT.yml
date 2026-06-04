@@ -1,74 +1,74 @@
 name: Actualizar Inversión Térmica
 
 on:
-schedule:
-- cron: "*/30 * * * *"
-workflow_dispatch:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
 
 permissions:
-contents: write
+  contents: write
 
 jobs:
-fetch-inversion:
-runs-on: ubuntu-latest
+  fetch-inversion:
+    runs-on: ubuntu-latest
 
-steps:
-  - name: Checkout repo
-    uses: actions/checkout@v4
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-  - name: Descargar CSV
-    run: |
-      curl -k -L "https://pronaire.mma.gob.cl/regiones/graficos/valparaiso/torre_met/Delta_48.csv" -o Delta_48.csv
+      - name: Descargar CSV
+        run: |
+          curl -k -L "https://pronaire.mma.gob.cl/regiones/graficos/valparaiso/torre_met/Delta_48.csv" -o Delta_48.csv
 
-  - name: Procesar CSV
-    run: |
-      python3 <<EOF
-      import json
+      - name: Procesar CSV
+        run: |
+          python3 <<EOF
+          import json
 
-      with open("Delta_48.csv", "r", encoding="utf-8") as f:
-          texto = f.read()
+          with open("Delta_48.csv", "r", encoding="utf-8") as f:
+              texto = f.read()
 
-      lineas = [l.strip() for l in texto.splitlines() if l.strip()]
-      datos = [l for l in lineas if not l.lower().startswith("fecha")]
+          lineas = [l.strip() for l in texto.splitlines() if l.strip()]
+          datos = [l for l in lineas if not l.lower().startswith("fecha")]
 
-      ultima = datos[-1].split(",")
+          ultima = datos[-1].split(",")
 
-      fecha_hora = ultima[0].strip()
-      delta = float(ultima[1].strip())
+          fecha_hora = ultima[0].strip()
+          delta = float(ultima[1].strip())
 
-      partes = fecha_hora.split(" ")
-      fecha = partes[0]
-      hora = partes[1]
+          partes = fecha_hora.split(" ")
+          fecha = partes[0]
+          hora = partes[1]
 
-      if delta < 2:
-          estado = "SIN INVERSION"
-          inversion = False
-      else:
-          estado = "CON INVERSION"
-          inversion = True
+          if delta < 2:
+              estado = "SIN INVERSION"
+              inversion = False
+          else:
+              estado = "CON INVERSION"
+              inversion = True
 
-      resultado = {
-          "delta": round(delta, 1),
-          "estado": estado,
-          "inversion": inversion,
-          "hora": hora,
-          "fecha": fecha
-      }
+          resultado = {
+              "delta": round(delta, 1),
+              "estado": estado,
+              "inversion": inversion,
+              "hora": hora,
+              "fecha": fecha
+          }
 
-      with open("inversion.json", "w", encoding="utf-8") as f:
-          json.dump(resultado, f, indent=2, ensure_ascii=False)
+          with open("inversion.json", "w", encoding="utf-8") as f:
+              json.dump(resultado, f, indent=2, ensure_ascii=False)
 
-      print(resultado)
-      EOF
+          print(resultado)
+          EOF
 
-  - name: Commit y push
-    run: |
-      git config user.name "github-actions[bot]"
-      git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Commit y push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      git add inversion.json
+          git add inversion.json
 
-      if ! git diff --cached --quiet; then
-        git commit -m "Actualizar inversion termica"
-        git push
-      fi
+          if ! git diff --cached --quiet; then
+            git commit -m "Actualizar inversion termica"
+            git push
+          fi
