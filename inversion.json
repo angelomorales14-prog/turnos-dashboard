@@ -1,15 +1,6 @@
 {
-  "numero": "162",
-  "condicion": "MAREJADA",
-  "emitida": "29/05/2026 13:48",
-
-  "lpg_amarre": "SI",
-  "lpg_desamarre": "SI",
-
-  "monoboya_amarre": "SI",
-  "monoboya_desamarre": "SI",
-
-  "practicos": "SI",
-  "fondeo": "SI",
-  "buceo": "SI"
+  "delta": 0.0,
+  "estado": "SIN INVERSION",
+  "hora": "--:--",
+  "fecha": "--"
 }
