@@ -44,8 +44,6 @@ jobs:
 
           if   delta < 2: estado = "SIN INVERSION"
           elif delta > 2: estado = "CON INVERSION"
-          elif delta < 4: estado = "MODERADA"
-          else:           estado = "FUERTE"
 
           resultado = {
               "delta":  round(delta, 1),
