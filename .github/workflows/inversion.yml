@@ -2,12 +2,16 @@ name: Actualizar Inversión Térmica
 
 on:
   schedule:
-    - cron: '*/30 * * * *'   # cada 30 minutos
+    - cron: '*/30 * * * *'
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   fetch-inversion:
     runs-on: ubuntu-latest
+
     steps:
 
       - name: Checkout repo
@@ -16,7 +20,9 @@ jobs:
       - name: Descargar y procesar CSV
         run: |
           python3 - << 'EOF'
-          import urllib.request, json, sys
+          import urllib.request
+          import json
+          import sys
 
           url = "https://pronaire.mma.gob.cl/regiones/graficos/valparaiso/torre_met/Delta_48.csv"
 
@@ -28,40 +34,54 @@ jobs:
               sys.exit(1)
 
           lineas = [l.strip() for l in texto.strip().split("\n") if l.strip()]
-          datos  = [l for l in lineas if not l.lower().startswith("fecha")]
+          datos = [l for l in lineas if not l.lower().startswith("fecha")]
 
           if not datos:
               print("CSV vacío", file=sys.stderr)
               sys.exit(1)
 
           ultima = datos[-1].split(",")
+
           fecha_hora = ultima[0].strip()
-          delta      = float(ultima[1].strip())
+          delta = float(ultima[1].strip())
 
           partes = fecha_hora.split(" ")
-          fecha  = partes[0] if len(partes) > 1 else ""
-          hora   = partes[1] if len(partes) > 1 else fecha_hora
 
-          if   delta < 2: estado = "SIN INVERSION"
-          elif delta > 2: estado = "CON INVERSION"
+          fecha = partes[0] if len(partes) > 1 else ""
+          hora  = partes[1] if len(partes) > 1 else fecha_hora
+
+          if delta < 2:
+              estado = "SIN INVERSION"
+              inversion = False
+          else:
+              estado = "CON INVERSION"
+              inversion = True
 
           resultado = {
-              "delta":  round(delta, 1),
+              "delta": round(delta, 1),
               "estado": estado,
-              "hora":   hora,
-              "fecha":  fecha
+              "inversion": inversion,
+              "hora": hora,
+              "fecha": fecha
           }
 
-          with open("inversion.json", "w") as f:
-              json.dump(resultado, f)
+          with open("inversion.json", "w", encoding="utf-8") as f:
+              json.dump(resultado, f, indent=2, ensure_ascii=False)
 
-          print(f"OK: delta={delta}, estado={estado}, hora={hora}")
+          print(
+              f"OK: delta={delta}, estado={estado}, "
+              f"hora={hora}, fecha={fecha}"
+          )
+
           EOF
 
       - name: Commit y push
         run: |
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
           git add inversion.json
+
           git diff --cached --quiet || git commit -m "chore: actualizar inversion.json"
+
           git push
