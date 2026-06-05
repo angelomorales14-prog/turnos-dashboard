@@ -447,6 +447,108 @@ iframe {
   .main-title { font-size: 22px; }
 }
 
+
+/* =========================
+   INVERSIÓN TÉRMICA
+========================= */
+
+.inversion-panel {
+  flex-shrink: 0;
+  height: 64px;
+  background: linear-gradient(180deg, #0a1f30, #071525);
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.inversion-titulo {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,.40);
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.inversion-separador {
+  width: 1px;
+  height: 36px;
+  background: rgba(255,255,255,.08);
+  margin: 0 20px;
+  flex-shrink: 0;
+}
+
+.inversion-campos {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex: 1;
+}
+
+.inversion-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.inversion-campo-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,.35);
+}
+
+.inversion-campo-valor {
+  font-size: 20px;
+  font-weight: 700;
+  color: rgba(255,255,255,.92);
+  letter-spacing: 0.3px;
+  line-height: 1;
+}
+
+.inversion-estado-badge {
+  padding: 4px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.inversion-estado-badge.sin-inversion {
+  background: rgba(150,150,150,0.15);
+  color: rgba(200,200,200,0.80);
+  border: 1px solid rgba(150,150,150,0.20);
+}
+
+.inversion-estado-badge.debil {
+  background: rgba(86,211,100,0.15);
+  color: #56d364;
+  border: 1px solid rgba(86,211,100,0.25);
+}
+
+.inversion-estado-badge.moderada {
+  background: rgba(230,190,50,0.15);
+  color: #e6c44a;
+  border: 1px solid rgba(230,190,50,0.25);
+}
+
+.inversion-estado-badge.fuerte {
+  background: rgba(207,60,60,0.20);
+  color: #ff6b6b;
+  border: 1px solid rgba(207,60,60,0.30);
+}
+
+.inversion-hora {
+  font-size: 13px;
+  color: rgba(255,255,255,.45);
+  letter-spacing: 0.5px;
+  margin-left: auto;
+}
+
 </style>
 </head>
 
@@ -474,54 +576,28 @@ iframe {
       <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHnJ_Y3CyFUDNRCq0ssX1Tv6BvAB8_912AhkHrWpNmSUYDfEl24p7CmU-URGuGyQ/pubhtml?gid=642341037&single=true&widget=false&headers=false&t=1"></iframe>
     </div>
 
-    <!-- CONDICIÓN DE PUERTO -->
-    <div class="cpuerto-panel">
+    <!-- INVERSIÓN TÉRMICA -->
+    <div class="inversion-panel">
 
-      <div class="cpuerto-header">
-        <div class="cpuerto-numero" id="cpuertoNumero">CONDICIÓN DE PUERTO Nº --</div>
-        <div class="cpuerto-condicion">
-          <i class="fa-solid fa-water"></i>
-          <span id="cpuertoCondicion">--</span>
-        </div>
-        <div class="cpuerto-fecha">Emitida: <span id="cpuertoFecha">--</span></div>
-      </div>
+      <div class="inversion-titulo">Inversión Térmica</div>
 
-      <div class="cpuerto-grid">
+      <div class="inversion-separador"></div>
 
-        <div class="cpuerto-item">
-          <div class="cpuerto-titulo">Amarre<br>LPG / BCZA / MTC</div>
-          <div class="cpuerto-badge" id="lpgAmarre">--</div>
+      <div class="inversion-campos">
+
+        <div class="inversion-campo">
+          <div class="inversion-campo-label">Delta T</div>
+          <div class="inversion-campo-valor" id="inversionDelta">--</div>
         </div>
 
-        <div class="cpuerto-item">
-          <div class="cpuerto-titulo">Desamarre<br>LPG / BCZA / MTC</div>
-          <div class="cpuerto-badge" id="lpgDesamarre">--</div>
+        <div class="inversion-separador"></div>
+
+        <div class="inversion-campo">
+          <div class="inversion-campo-label">Estado</div>
+          <div class="inversion-estado-badge sin-inversion" id="inversionEstado">--</div>
         </div>
 
-        <div class="cpuerto-item">
-          <div class="cpuerto-titulo">Amarre<br>Monoboya</div>
-          <div class="cpuerto-badge" id="monoboyaAmarre">--</div>
-        </div>
-
-        <div class="cpuerto-item">
-          <div class="cpuerto-titulo">Desamarre<br>Monoboya</div>
-          <div class="cpuerto-badge" id="monoboyaDesamarre">--</div>
-        </div>
-
-        <div class="cpuerto-item">
-          <div class="cpuerto-titulo">Embarque<br>Prácticos</div>
-          <div class="cpuerto-badge" id="practicos">--</div>
-        </div>
-
-        <div class="cpuerto-item">
-          <div class="cpuerto-titulo">Fondeo Naves<br>Extranjeras</div>
-          <div class="cpuerto-badge" id="fondeo">--</div>
-        </div>
-
-        <div class="cpuerto-item">
-          <div class="cpuerto-titulo">Buceo</div>
-          <div class="cpuerto-badge" id="buceo">--</div>
-        </div>
+        <div class="inversion-hora" id="inversionHora">--</div>
 
       </div>
 
@@ -714,50 +790,61 @@ fetch(
 });
 
 /* =========================
-   CONDICIÓN DE PUERTO
+   INVERSIÓN TÉRMICA
 ========================= */
-fetch(
-  "https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/main/cpuerto.json?t=" +
-  new Date().getTime()
-)
-.then(r => r.json())
-.then(data => {
 
-  document.getElementById("cpuertoNumero").innerText =
-    "CONDICIÓN DE PUERTO Nº " + data.numero;
+function clasificarInversion(delta) {
+  if (delta < 2)  return { texto: "SIN INVERSION", clase: "sin-inversion" };
+  if (delta > 2)  return { texto: "CON INVERSIÓN", clase: "con-inversión" };
+}
 
-  document.getElementById("cpuertoCondicion").innerText =
-    data.condicion;
+fetch("https://pronaire.mma.gob.cl/regiones/graficos/valparaiso/torre_met/Delta_48.csv?t=" + new Date().getTime())
+  .then(r => {
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.text();
+  })
+  .then(csv => {
 
-  const fecha = data.fecha || null;
-  const fechaEl = document.getElementById("cpuertoFecha");
-  if (fecha) {
-    fechaEl.parentElement.style.display = "block";
-    fechaEl.innerText = fecha;
-  } else {
-    fechaEl.parentElement.style.display = "none";
-  }
+    const lineas = csv.trim().split("\n").filter(l => l.trim() !== "");
 
-  function cargarBadge(id, valor) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.innerText = valor === "SI" ? "HABILITADO" : "NO HABILITADO";
-    el.classList.remove("si", "no");
-    el.classList.add(valor === "SI" ? "si" : "no");
-  }
+    // Ignorar encabezado si existe
+    const datos = lineas.filter(l => !l.toLowerCase().startsWith("fecha"));
 
-  cargarBadge("lpgAmarre",          data.lpg_amarre);
-  cargarBadge("lpgDesamarre",       data.lpg_desamarre);
-  cargarBadge("monoboyaAmarre",     data.monoboya_amarre);
-  cargarBadge("monoboyaDesamarre",  data.monoboya_desamarre);
-  cargarBadge("practicos",          data.practicos);
-  cargarBadge("fondeo",             data.fondeo);
-  cargarBadge("buceo",              data.buceo);
+    if (!datos.length) throw new Error("CSV vacío");
 
-})
-.catch(error => {
-  console.error("Error cargando cpuerto.json:", error);
-});
+    const ultima = datos[datos.length - 1].split(",");
+
+    if (ultima.length < 2) throw new Error("Formato inesperado");
+
+    const fechaHora = ultima[0].trim();   // ej: "02-06-26 10:00"
+    const delta     = parseFloat(ultima[1].trim());
+
+    if (isNaN(delta)) throw new Error("Delta no numérico");
+
+    // Extraer hora
+    const partes = fechaHora.split(" ");
+    const hora   = partes.length > 1 ? partes[1] : fechaHora;
+
+    const estado = clasificarInversion(delta);
+
+    document.getElementById("inversionDelta").innerText =
+      delta.toFixed(1) + " °C";
+
+    const estadoEl = document.getElementById("inversionEstado");
+    estadoEl.innerText = estado.texto;
+    estadoEl.className = "inversion-estado-badge " + estado.clase;
+
+    document.getElementById("inversionHora").innerText =
+      "Medición: " + hora;
+
+  })
+  .catch(err => {
+    console.error("Inversión térmica:", err);
+    document.getElementById("inversionDelta").innerText  = "Sin datos";
+    document.getElementById("inversionEstado").innerText = "Sin Información";
+    document.getElementById("inversionEstado").className = "inversion-estado-badge sin-inversion";
+    document.getElementById("inversionHora").innerText   = "";
+  });
 
 /* =========================
    ROTACIÓN KPI
