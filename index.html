@@ -518,28 +518,16 @@ iframe {
   text-transform: uppercase;
 }
 
-.inversion-estado-badge.sin-inversion {
-  background: rgba(150,150,150,0.15);
-  color: rgba(200,200,200,0.80);
-  border: 1px solid rgba(150,150,150,0.20);
+.inversion-estado-badge.con-inversion {
+  background: rgba(255,107,107,0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(255,107,107,0.25);
 }
 
-.inversion-estado-badge.debil {
+.inversion-estado-badge.sin-inversion {
   background: rgba(86,211,100,0.15);
   color: #56d364;
   border: 1px solid rgba(86,211,100,0.25);
-}
-
-.inversion-estado-badge.moderada {
-  background: rgba(230,190,50,0.15);
-  color: #e6c44a;
-  border: 1px solid rgba(230,190,50,0.25);
-}
-
-.inversion-estado-badge.fuerte {
-  background: rgba(207,60,60,0.20);
-  color: #ff6b6b;
-  border: 1px solid rgba(207,60,60,0.30);
 }
 
 .inversion-hora {
@@ -793,59 +781,51 @@ fetch(
    INVERSIÓN TÉRMICA
 ========================= */
 
-function clasificarInversion(delta) {
-  if (delta < 2)  return { texto: "SIN INVERSION", clase: "sin-inversion" };
-  if (delta > 2)  return { texto: "CON INVERSIÓN", clase: "con-inversión" };
-}
+fetch(
+  "https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/main/inversion.json?t=" +
+  new Date().getTime()
+)
 
-fetch("https://pronaire.mma.gob.cl/regiones/graficos/valparaiso/torre_met/Delta_48.csv?t=" + new Date().getTime())
-  .then(r => {
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return r.text();
-  })
-  .then(csv => {
+.then(response => response.json())
 
-    const lineas = csv.trim().split("\n").filter(l => l.trim() !== "");
+.then(data => {
 
-    // Ignorar encabezado si existe
-    const datos = lineas.filter(l => !l.toLowerCase().startsWith("fecha"));
+  document.getElementById("inversionDelta").innerText =
+    data.delta.toFixed(1) + " °C";
 
-    if (!datos.length) throw new Error("CSV vacío");
+  const estadoEl =
+    document.getElementById("inversionEstado");
 
-    const ultima = datos[datos.length - 1].split(",");
+  estadoEl.innerText = data.estado;
 
-    if (ultima.length < 2) throw new Error("Formato inesperado");
+  estadoEl.className =
+    "inversion-estado-badge " +
+    (data.inversion
+      ? "con-inversion"
+      : "sin-inversion");
 
-    const fechaHora = ultima[0].trim();   // ej: "02-06-26 10:00"
-    const delta     = parseFloat(ultima[1].trim());
+  document.getElementById("inversionHora").innerText =
+    "Medición: " +
+    data.fecha +
+    " " +
+    data.hora;
 
-    if (isNaN(delta)) throw new Error("Delta no numérico");
+})
 
-    // Extraer hora
-    const partes = fechaHora.split(" ");
-    const hora   = partes.length > 1 ? partes[1] : fechaHora;
+.catch(error => {
 
-    const estado = clasificarInversion(delta);
+  console.error("Inversión térmica:", error);
 
-    document.getElementById("inversionDelta").innerText =
-      delta.toFixed(1) + " °C";
+  document.getElementById("inversionDelta").innerText =
+    "--";
 
-    const estadoEl = document.getElementById("inversionEstado");
-    estadoEl.innerText = estado.texto;
-    estadoEl.className = "inversion-estado-badge " + estado.clase;
+  document.getElementById("inversionEstado").innerText =
+    "Sin datos";
 
-    document.getElementById("inversionHora").innerText =
-      "Medición: " + hora;
+  document.getElementById("inversionHora").innerText =
+    "";
 
-  })
-  .catch(err => {
-    console.error("Inversión térmica:", err);
-    document.getElementById("inversionDelta").innerText  = "Sin datos";
-    document.getElementById("inversionEstado").innerText = "Sin Información";
-    document.getElementById("inversionEstado").className = "inversion-estado-badge sin-inversion";
-    document.getElementById("inversionHora").innerText   = "";
-  });
-
+});
 /* =========================
    ROTACIÓN KPI
 ========================= */
