@@ -19,3 +19,6 @@ jobs:
       - name: Buscar referencias a ventilacion
         run: |
           grep -i -n "ventil" ventilacion.html | head -100
+      - name: Buscar scripts
+        run: |
+          grep -i -n "json\|ajax\|fetch\|api" ventilacion.html | head -100
