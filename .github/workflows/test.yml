@@ -1,0 +1,17 @@
+name: Test Ventilacion
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar HTML
+        run: |
+          curl -L "https://airecqp.mma.gob.cl/pronostico-de-ventilacion/" -o ventilacion.html
+
+      - name: Buscar tabla
+        run: |
+          grep -i "Condición de ventilación" ventilacion.html | head
