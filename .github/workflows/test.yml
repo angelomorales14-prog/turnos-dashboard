@@ -59,4 +59,4 @@ jobs:
 
     - name: Extraer condicion ventilacion
       run: |
-        grep -A 30 "Condición de ventilación" ventilacion.html
+        grep -A 80 "Condición de ventilación" ventilacion.html
