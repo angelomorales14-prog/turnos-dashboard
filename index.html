@@ -96,6 +96,8 @@ body {
   flex: 1.8;
   border-right: 2px solid rgba(255,255,255,0.05);
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .right {
@@ -136,10 +138,6 @@ body {
   100% { transform: scale(1);    opacity: 0.45; }
 }
 
-/* =========================
-   KPI CONTAINER
-========================= */
-
 .kpi-container {
   position: relative;
   z-index: 2;
@@ -172,11 +170,6 @@ body {
   justify-content: center;
   text-align: center;
 }
-
-/* =========================
-   KPI TEXTOS — tamaños fijos
-   escalados por JS al contenedor
-========================= */
 
 .kpi-icon {
   font-size: 48px;
@@ -238,8 +231,6 @@ body {
   box-shadow: 0 0 18px rgba(41,211,255,.55);
   transition: width 1s ease;
 }
-
-/* indicadores */
 
 .kpi-indicator {
   position: absolute;
@@ -308,13 +299,8 @@ iframe {
 }
 
 /* =========================
-   CONDICIÓN DE PUERTO
+   PAN FRAME
 ========================= */
-
-.left {
-  display: flex;
-  flex-direction: column;
-}
 
 .pan-frame {
   flex: 1;
@@ -332,124 +318,8 @@ iframe {
   left: 0;
 }
 
-.cpuerto-panel {
-  flex-shrink: 0;
-  height: 130px;
-  background: linear-gradient(180deg, #0d2d45, #0a1f30);
-  border-top: 1px solid rgba(255,255,255,.08);
-  padding: 12px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 10px;
-}
-
-.cpuerto-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.cpuerto-numero {
-  font-size: 18px;
-  font-weight: 700;
-  color: rgba(255,255,255,0.9);
-  letter-spacing: 0.5px;
-}
-
-.cpuerto-condicion {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 20px;
-  font-weight: 700;
-  color: #4fc3ff;
-  letter-spacing: 1.5px;
-}
-
-.cpuerto-condicion i {
-  font-size: 18px;
-}
-
-.cpuerto-fecha {
-  font-size: 13px;
-  color: rgba(255,255,255,.50);
-  letter-spacing: 0.3px;
-}
-
-.cpuerto-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  gap: 6px;
-  align-items: stretch;
-}
-
-.cpuerto-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 6px;
-  background: rgba(255,255,255,.04);
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,.06);
-  gap: 6px;
-}
-
-.cpuerto-titulo {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: rgba(255,255,255,.45);
-  text-align: center;
-  line-height: 1.3;
-}
-
-.cpuerto-terminal-names {
-  font-size: 11px;
-  color: rgba(255,255,255,.70);
-  text-align: left;
-  line-height: 1.8;
-  width: 100%;
-  padding-left: 4px;
-}
-
-.cpuerto-badge {
-  padding: 5px 10px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  text-align: center;
-  line-height: 1.3;
-}
-
-.cpuerto-badge.si {
-  background: rgba(12,157,36,0.25);
-  color: #56d364;
-  box-shadow: 0 0 10px rgba(86,211,100,.25);
-  border: 1px solid rgba(86,211,100,.3);
-}
-
-.cpuerto-badge.no {
-  background: rgba(207,18,18,0.25);
-  color: #ff6b6b;
-  box-shadow: 0 0 10px rgba(255,107,107,.25);
-  border: 1px solid rgba(255,107,107,.3);
-}
-
-@media (max-width: 900px) {
-  .main { flex-direction: column; }
-  .left, .right { width: 100%; }
-  .left { height: 60%; }
-  .right { height: 40%; }
-  .header-titles { margin-left: 20px; }
-  .main-title { font-size: 22px; }
-}
-
-
 /* =========================
-   INVERSIÓN TÉRMICA
+   PANEL ROTATIVO
 ========================= */
 
 .inversion-panel {
@@ -458,9 +328,29 @@ iframe {
   background: linear-gradient(180deg, #0a1f30, #071525);
   border-top: 1px solid rgba(255,255,255,.06);
   padding: 0 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Cada vista ocupa exactamente el panel completo */
+.vista {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   gap: 0;
+  padding: 0 20px;
+  box-sizing: border-box;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+.vista.oculta {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .inversion-titulo {
@@ -479,13 +369,6 @@ iframe {
   background: rgba(255,255,255,.08);
   margin: 0 20px;
   flex-shrink: 0;
-}
-
-.inversion-campos {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  flex: 1;
 }
 
 .inversion-campo {
@@ -518,34 +401,18 @@ iframe {
   text-transform: uppercase;
 }
 
-.inversion-estado-badge.con-inversion {
-  background: rgba(255,107,107,0.15);
-  color: #ff6b6b;
-  border: 1px solid rgba(255,107,107,0.25);
-}
-
 .inversion-estado-badge.sin-inversion {
   background: rgba(86,211,100,0.15);
   color: #56d364;
   border: 1px solid rgba(86,211,100,0.25);
 }
 
-.inversion-hora {
-  font-size: 13px;
-  color: rgba(255,255,255,.45);
-  letter-spacing: 0.5px;
-  margin-left: auto;
-}
-
-
-/* Inversión con inversión */
 .inversion-estado-badge.con-inversion {
   background: rgba(207,60,60,0.20);
   color: #ff6b6b;
   border: 1px solid rgba(207,60,60,0.30);
 }
 
-/* Ventilación badges */
 .inversion-estado-badge.vent-b {
   background: rgba(86,211,100,0.15);
   color: #56d364;
@@ -564,13 +431,20 @@ iframe {
   border: 1px solid rgba(207,60,60,0.30);
 }
 
-/* Fade del panel rotativo */
-.inversion-panel {
-  transition: opacity 0.6s ease;
+.inversion-hora {
+  font-size: 13px;
+  color: rgba(255,255,255,.45);
+  letter-spacing: 0.5px;
+  margin-left: auto;
 }
 
-.inversion-panel.fadeout {
-  opacity: 0;
+@media (max-width: 900px) {
+  .main { flex-direction: column; }
+  .left, .right { width: 100%; }
+  .left { height: 60%; }
+  .right { height: 40%; }
+  .header-titles { margin-left: 20px; }
+  .main-title { font-size: 22px; }
 }
 
 </style>
@@ -604,49 +478,35 @@ iframe {
     <div class="inversion-panel">
 
       <!-- Vista 1: Inversión Térmica -->
-      <div id="vistaInversion" style="display:contents;">
-
+      <div class="vista" id="vistaInversion">
         <div class="inversion-titulo">Inversión Térmica</div>
-
         <div class="inversion-separador"></div>
-
         <div class="inversion-campo">
           <div class="inversion-campo-label">Delta T</div>
           <div class="inversion-campo-valor" id="inversionDelta">--</div>
         </div>
-
         <div class="inversion-separador"></div>
-
         <div class="inversion-campo">
           <div class="inversion-campo-label">Estado</div>
           <div class="inversion-estado-badge sin-inversion" id="inversionEstado">--</div>
         </div>
-
         <div class="inversion-hora" id="inversionHora">--</div>
-
       </div>
 
       <!-- Vista 2: Ventilación -->
-      <div id="vistaVentilacion" style="display:contents;">
-
-        <div class="inversion-titulo">Condición de Ventilación</div>
-
+      <div class="vista oculta" id="vistaVentilacion">
+        <div class="inversion-titulo">Cond. Ventilación</div>
         <div class="inversion-separador"></div>
-
         <div class="inversion-campo">
           <div class="inversion-campo-label">Código</div>
           <div class="inversion-campo-valor" id="ventilacionCodigo">--</div>
         </div>
-
         <div class="inversion-separador"></div>
-
         <div class="inversion-campo">
           <div class="inversion-campo-label">Estado</div>
           <div class="inversion-estado-badge sin-inversion" id="ventilacionEstado">--</div>
         </div>
-
         <div class="inversion-hora" id="ventilacionHora">--</div>
-
       </div>
 
     </div>
@@ -761,41 +621,29 @@ function toggleFullscreen() {
 }
 
 /* =========================
-   ESCALAR KPI AL CONTENEDOR
-   Se ejecuta al cargar y en resize.
-   Mide el panel .placeholder y calcula
-   un scale para que .kpi-content
-   llene el espacio disponible.
+   ESCALAR KPI
 ========================= */
 function escalarKPI() {
-  const panel = document.querySelector(".placeholder");
-  const contents = document.querySelectorAll(".kpi-content");
-
+  var panel = document.querySelector(".placeholder");
+  var contents = document.querySelectorAll(".kpi-content");
   if (!panel || !contents.length) return;
-
-  const panelW = panel.clientWidth;
-  const panelH = panel.clientHeight;
-
-  contents.forEach(content => {
-    // Reset para medir tamaño natural
+  var panelW = panel.clientWidth;
+  var panelH = panel.clientHeight;
+  for (var i = 0; i < contents.length; i++) {
+    var content = contents[i];
     content.style.transform = "none";
     content.style.marginLeft = "0";
-
-    const natW = content.scrollWidth;
-    const natH = content.scrollHeight;
-
-    const scaleX = (panelW * 0.85) / natW;
-    const scaleY = (panelH * 0.85) / natH;
-
-    const scale = Math.min(scaleX, scaleY, 2.3);
-
-    // Forzar centrado explícito compatible con Tizen
+    var natW = content.scrollWidth;
+    var natH = content.scrollHeight;
+    var scaleX = (panelW * 0.85) / natW;
+    var scaleY = (panelH * 0.85) / natH;
+    var scale = Math.min(scaleX, scaleY, 2.3);
     content.style.transformOrigin = "50% 50%";
-    content.style.transform = `scale(${scale})`;
+    content.style.transform = "scale(" + scale + ")";
     content.style.position = "relative";
     content.style.left = "0";
     content.style.margin = "0 auto";
-  });
+  }
 }
 
 window.addEventListener("resize", escalarKPI);
@@ -807,30 +655,28 @@ fetch(
   "https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/main/kpis.json?t=" +
   new Date().getTime()
 )
-.then(r => r.json())
-.then(data => {
-
+.then(function(r) { return r.json(); })
+.then(function(data) {
   function cargarKPI(nombreKPI, ids) {
-    const registro = data.find(item => item.nombre === nombreKPI);
+    var registro = null;
+    for (var i = 0; i < data.length; i++) {
+      if (data[i].nombre === nombreKPI) { registro = data[i]; break; }
+    }
     if (!registro) return;
-    const valor = Number(registro.valor);
+    var valor = Number(registro.valor);
     document.getElementById(ids.valor).innerText = valor + "%";
     document.getElementById(ids.periodo).innerText = registro.periodo;
     document.getElementById(ids.progress).style.width = valor + "%";
   }
-
   cargarKPI("% Cumplimiento Volúmen", {
     valor: "kpiVolumen", periodo: "periodoVolumen", progress: "progressVolumen"
   });
-
   cargarKPI("% Cumplimiento Faenas", {
     valor: "kpiFaenas", periodo: "periodoFaenas", progress: "progressFaenas"
   });
-
-  // Escalar después de que los datos estén cargados
   setTimeout(escalarKPI, 100);
 })
-.catch(error => {
+.catch(function(error) {
   console.error(error);
   document.getElementById("kpiVolumen").innerText = "ERROR";
   document.getElementById("kpiFaenas").innerText = "ERROR";
@@ -838,41 +684,20 @@ fetch(
 });
 
 /* =========================
-   INVERSIÓN TÉRMICA + VENTILACIÓN (rotativo)
+   PANEL ROTATIVO
 ========================= */
-
-const BASE = "https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/main/";
-
-let datosInversion   = null;
-let datosVentilacion = null;
-let vistaActual      = 0; // 0 = inversión, 1 = ventilación
-
-// Cargar ambos JSONs
-Promise.all([
-  fetch(BASE + "inversion.json?t="   + Date.now()).then(r => r.json()),
-  fetch(BASE + "ventilacion.json?t=" + Date.now()).then(r => r.json())
-])
-.then(([inv, vent]) => {
-  datosInversion   = inv;
-  datosVentilacion = vent;
-  poblarInversion(inv);
-  poblarVentilacion(vent);
-  mostrarVista(0);
-})
-.catch(err => {
-  console.error("Error cargando datos:", err);
-  mostrarVista(0);
-});
+var BASE = "https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/main/";
+var vistaActual = 0;
 
 function poblarInversion(data) {
   try {
     document.getElementById("inversionDelta").innerText =
-      parseFloat(data.delta).toFixed(1) + " °C";
-    const el = document.getElementById("inversionEstado");
-    el.innerText  = data.estado;
-    el.className  = "inversion-estado-badge " + (data.inversion ? "con-inversion" : "sin-inversion");
+      parseFloat(data.delta).toFixed(1) + " \u00b0C";
+    var el = document.getElementById("inversionEstado");
+    el.innerText = data.estado;
+    el.className = "inversion-estado-badge " + (data.inversion ? "con-inversion" : "sin-inversion");
     document.getElementById("inversionHora").innerText =
-      "Medición: " + (data.fecha || "") + " " + (data.hora || "");
+      "Medici\u00f3n: " + (data.fecha || "") + " " + (data.hora || "");
   } catch(e) {
     document.getElementById("inversionDelta").innerText = "--";
     document.getElementById("inversionEstado").innerText = "Sin datos";
@@ -882,9 +707,9 @@ function poblarInversion(data) {
 function poblarVentilacion(data) {
   try {
     document.getElementById("ventilacionCodigo").innerText = data.codigo || "--";
-    const el = document.getElementById("ventilacionEstado");
+    var el = document.getElementById("ventilacionEstado");
     el.innerText = data.estado || "--";
-    const cod = (data.codigo || "").toUpperCase();
+    var cod = (data.codigo || "").toUpperCase();
     el.className = "inversion-estado-badge " +
       (cod === "B" ? "vent-b" : cod === "R" ? "vent-r" : cod === "M" ? "vent-m" : "sin-inversion");
     document.getElementById("ventilacionHora").innerText =
@@ -896,38 +721,48 @@ function poblarVentilacion(data) {
 }
 
 function mostrarVista(idx) {
-  const panel = document.querySelector(".inversion-panel");
-  const v1    = document.getElementById("vistaInversion");
-  const v2    = document.getElementById("vistaVentilacion");
-
-  panel.classList.add("fadeout");
-
-  setTimeout(() => {
-    if (idx === 0) {
-      v1.style.display = "contents";
-      v2.style.display = "none";
-    } else {
-      v1.style.display = "none";
-      v2.style.display = "contents";
-    }
-    panel.classList.remove("fadeout");
-  }, 600);
-
+  var v1 = document.getElementById("vistaInversion");
+  var v2 = document.getElementById("vistaVentilacion");
+  if (idx === 0) {
+    v1.className = "vista";
+    v2.className = "vista oculta";
+  } else {
+    v1.className = "vista oculta";
+    v2.className = "vista";
+  }
   vistaActual = idx;
 }
 
-// Rotación automática cada 15 segundos
-setInterval(() => {
+// Cargar ambos JSONs
+fetch(BASE + "inversion.json?t=" + Date.now())
+  .then(function(r) { return r.json(); })
+  .then(function(inv) {
+    poblarInversion(inv);
+    return fetch(BASE + "ventilacion.json?t=" + Date.now());
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(vent) {
+    poblarVentilacion(vent);
+    mostrarVista(0);
+  })
+  .catch(function(err) {
+    console.error("Error cargando datos:", err);
+    mostrarVista(0);
+  });
+
+// Rotación cada 15 segundos
+setInterval(function() {
   mostrarVista(vistaActual === 0 ? 1 : 0);
 }, 15000);
+
 /* =========================
    ROTACIÓN KPI
 ========================= */
-const cards = document.querySelectorAll(".kpi-card");
-const dots  = document.querySelectorAll(".dot");
-let current = 0;
+var cards = document.querySelectorAll(".kpi-card");
+var dots  = document.querySelectorAll(".dot");
+var current = 0;
 
-setInterval(() => {
+setInterval(function() {
   cards[current].classList.remove("active");
   dots[current].classList.remove("active");
   current = (current + 1) % cards.length;
@@ -943,8 +778,7 @@ updateLastUpdate();
 actualizarFechaHeader();
 setInterval(updateLastUpdate, 600000);
 
-// Escalar al cargar (fuentes pueden tardar)
-document.fonts.ready.then(() => {
+document.fonts.ready.then(function() {
   escalarKPI();
 });
 
