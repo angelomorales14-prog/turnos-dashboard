@@ -14,4 +14,4 @@ jobs:
 
       - name: Buscar ventilacion horaria
         run: |
-          grep -oE '[0-9]{2}:[0-9]{2}.*[BRM]' ventilacion.html | head -50
+          grep -oE '[0-9]{2}:[0-9]{2}' ventilacion.html | head -50
