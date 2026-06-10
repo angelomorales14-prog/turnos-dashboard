@@ -17,10 +17,10 @@ jobs:
         echo "=== TAMAÑO HTML ==="
         wc -c ventilacion.html
 
-    - name: Primeras 300 lineas
+    - name: Primeras 200 lineas
       run: |
         echo "=== HEAD HTML ==="
-        head -300 ventilacion.html
+        head -200 ventilacion.html
 
     - name: Buscar horas
       run: |
@@ -30,33 +30,44 @@ jobs:
     - name: Buscar ventilacion
       run: |
         echo "=== VENTILACION ==="
-        grep -i -n "ventil" ventilacion.html | head -200
+        grep -i -n "ventil" ventilacion.html | head -200 || true
 
     - name: Buscar scripts externos
       run: |
         echo "=== SCRIPTS ==="
-        grep -oE 'src="[^"]+"' ventilacion.html | sort | uniq
+        grep -oE 'src="[^"]+"' ventilacion.html | sort | uniq || true
 
     - name: Buscar JSON API AJAX
       run: |
         echo "=== JSON AJAX API ==="
-        grep -i -n "json\|ajax\|fetch\|api\|xmlhttprequest" ventilacion.html | head -200
+        grep -i -n "json\|ajax\|fetch\|api\|xmlhttprequest" ventilacion.html | head -200 || true
 
-    - name: Buscar letras B R M
+    - name: Buscar tablas
       run: |
-        echo "=== B R M ==="
-        grep -nE '>B<|>R<|>M<' ventilacion.html | head -200
+        echo "=== TABLE ==="
+        grep -i -n "<table" ventilacion.html | head -100 || true
 
-    - name: Buscar tabla horaria
+    - name: Buscar SVG
       run: |
-        echo "=== TABLA HORARIA ==="
-        grep -A 100 -B 20 "13:00" ventilacion.html
+        echo "=== SVG ==="
+        grep -i -n "<svg" ventilacion.html | head -100 || true
 
-    - name: Extraer bloque 13:00
+    - name: Buscar Canvas
       run: |
-        grep -A 40 -B 10 "13:00" ventilacion.html > bloque.txt
-        cat bloque.txt
+        echo "=== CANVAS ==="
+        grep -i -n "<canvas" ventilacion.html | head -100 || true
 
-    - name: Extraer condicion ventilacion
+    - name: Buscar Imagenes
       run: |
-        grep -A 80 "Condición de ventilación" ventilacion.html
+        echo "=== IMG ==="
+        grep -oE 'src="[^"]+\.(png|jpg|jpeg|gif|webp)"' ventilacion.html | sort | uniq || true
+
+    - name: Descargar JS principal
+      run: |
+        curl -L "https://airecqp.mma.gob.cl/wp-content/uploads/essential-addons-elementor/eael-9322.js" -o eael.js || true
+
+    - name: Buscar datos en JS
+      run: |
+        echo "=== JS ==="
+        grep -i -n "ventil\|json\|api\|ajax\|hora\|13:00" eael.js | head -200 || true
+   
