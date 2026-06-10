@@ -537,6 +537,42 @@ iframe {
   margin-left: auto;
 }
 
+
+/* Inversión con inversión */
+.inversion-estado-badge.con-inversion {
+  background: rgba(207,60,60,0.20);
+  color: #ff6b6b;
+  border: 1px solid rgba(207,60,60,0.30);
+}
+
+/* Ventilación badges */
+.inversion-estado-badge.vent-b {
+  background: rgba(86,211,100,0.15);
+  color: #56d364;
+  border: 1px solid rgba(86,211,100,0.25);
+}
+
+.inversion-estado-badge.vent-r {
+  background: rgba(230,190,50,0.15);
+  color: #e6c44a;
+  border: 1px solid rgba(230,190,50,0.25);
+}
+
+.inversion-estado-badge.vent-m {
+  background: rgba(207,60,60,0.20);
+  color: #ff6b6b;
+  border: 1px solid rgba(207,60,60,0.30);
+}
+
+/* Fade del panel rotativo */
+.inversion-panel {
+  transition: opacity 0.6s ease;
+}
+
+.inversion-panel.fadeout {
+  opacity: 0;
+}
+
 </style>
 </head>
 
@@ -561,17 +597,18 @@ iframe {
   <div class="left">
 
     <div class="pan-frame">
-      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSHK8p5P0W2vuBI2IrQ6gRSbet5o--F0DXHduZ-0EcHf8jAjeHmhQ8eptLZ9PvPDQ/pubhtml?gid=795965662&single=true&widget=false&headers=false&t=1"></iframe>
+      <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTHnJ_Y3CyFUDNRCq0ssX1Tv6BvAB8_912AhkHrWpNmSUYDfEl24p7CmU-URGuGyQ/pubhtml?gid=642341037&single=true&widget=false&headers=false&t=1"></iframe>
     </div>
 
-    <!-- INVERSIÓN TÉRMICA -->
+    <!-- PANEL ROTATIVO: INVERSIÓN TÉRMICA / VENTILACIÓN -->
     <div class="inversion-panel">
 
-      <div class="inversion-titulo">Inversión Térmica</div>
+      <!-- Vista 1: Inversión Térmica -->
+      <div id="vistaInversion" style="display:contents;">
 
-      <div class="inversion-separador"></div>
+        <div class="inversion-titulo">Inversión Térmica</div>
 
-      <div class="inversion-campos">
+        <div class="inversion-separador"></div>
 
         <div class="inversion-campo">
           <div class="inversion-campo-label">Delta T</div>
@@ -586,6 +623,29 @@ iframe {
         </div>
 
         <div class="inversion-hora" id="inversionHora">--</div>
+
+      </div>
+
+      <!-- Vista 2: Ventilación -->
+      <div id="vistaVentilacion" style="display:contents;">
+
+        <div class="inversion-titulo">Condición de Ventilación</div>
+
+        <div class="inversion-separador"></div>
+
+        <div class="inversion-campo">
+          <div class="inversion-campo-label">Código</div>
+          <div class="inversion-campo-valor" id="ventilacionCodigo">--</div>
+        </div>
+
+        <div class="inversion-separador"></div>
+
+        <div class="inversion-campo">
+          <div class="inversion-campo-label">Estado</div>
+          <div class="inversion-estado-badge sin-inversion" id="ventilacionEstado">--</div>
+        </div>
+
+        <div class="inversion-hora" id="ventilacionHora">--</div>
 
       </div>
 
@@ -778,54 +838,88 @@ fetch(
 });
 
 /* =========================
-   INVERSIÓN TÉRMICA
+   INVERSIÓN TÉRMICA + VENTILACIÓN (rotativo)
 ========================= */
 
-fetch(
-  "https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/main/inversion.json?t=" +
-  new Date().getTime()
-)
+const BASE = "https://raw.githubusercontent.com/angelomorales14-prog/turnos-dashboard/main/";
 
-.then(response => response.json())
+let datosInversion   = null;
+let datosVentilacion = null;
+let vistaActual      = 0; // 0 = inversión, 1 = ventilación
 
-.then(data => {
-
-  document.getElementById("inversionDelta").innerText =
-    data.delta.toFixed(1) + " °C";
-
-  const estadoEl =
-    document.getElementById("inversionEstado");
-
-  estadoEl.innerText = data.estado;
-
-  estadoEl.className =
-    "inversion-estado-badge " +
-    (data.inversion
-      ? "con-inversion"
-      : "sin-inversion");
-
-  document.getElementById("inversionHora").innerText =
-    "Medición: " +
-    data.fecha +
-    " " +
-    data.hora;
-
+// Cargar ambos JSONs
+Promise.all([
+  fetch(BASE + "inversion.json?t="   + Date.now()).then(r => r.json()),
+  fetch(BASE + "ventilacion.json?t=" + Date.now()).then(r => r.json())
+])
+.then(([inv, vent]) => {
+  datosInversion   = inv;
+  datosVentilacion = vent;
+  poblarInversion(inv);
+  poblarVentilacion(vent);
+  mostrarVista(0);
 })
-
-.catch(error => {
-
-  console.error("Inversión térmica:", error);
-
-  document.getElementById("inversionDelta").innerText =
-    "--";
-
-  document.getElementById("inversionEstado").innerText =
-    "Sin datos";
-
-  document.getElementById("inversionHora").innerText =
-    "";
-
+.catch(err => {
+  console.error("Error cargando datos:", err);
+  mostrarVista(0);
 });
+
+function poblarInversion(data) {
+  try {
+    document.getElementById("inversionDelta").innerText =
+      parseFloat(data.delta).toFixed(1) + " °C";
+    const el = document.getElementById("inversionEstado");
+    el.innerText  = data.estado;
+    el.className  = "inversion-estado-badge " + (data.inversion ? "con-inversion" : "sin-inversion");
+    document.getElementById("inversionHora").innerText =
+      "Medición: " + (data.fecha || "") + " " + (data.hora || "");
+  } catch(e) {
+    document.getElementById("inversionDelta").innerText = "--";
+    document.getElementById("inversionEstado").innerText = "Sin datos";
+  }
+}
+
+function poblarVentilacion(data) {
+  try {
+    document.getElementById("ventilacionCodigo").innerText = data.codigo || "--";
+    const el = document.getElementById("ventilacionEstado");
+    el.innerText = data.estado || "--";
+    const cod = (data.codigo || "").toUpperCase();
+    el.className = "inversion-estado-badge " +
+      (cod === "B" ? "vent-b" : cod === "R" ? "vent-r" : cod === "M" ? "vent-m" : "sin-inversion");
+    document.getElementById("ventilacionHora").innerText =
+      "Actualizado: " + (data.actualizado || data.hora_actual || "--");
+  } catch(e) {
+    document.getElementById("ventilacionCodigo").innerText = "--";
+    document.getElementById("ventilacionEstado").innerText = "Sin datos";
+  }
+}
+
+function mostrarVista(idx) {
+  const panel = document.querySelector(".inversion-panel");
+  const v1    = document.getElementById("vistaInversion");
+  const v2    = document.getElementById("vistaVentilacion");
+
+  panel.classList.add("fadeout");
+
+  setTimeout(() => {
+    if (idx === 0) {
+      v1.style.display = "contents";
+      v2.style.display = "none";
+    } else {
+      v1.style.display = "none";
+      v2.style.display = "contents";
+    }
+    panel.classList.remove("fadeout");
+  }, 600);
+
+  vistaActual = idx;
+}
+
+// Rotación automática cada 15 segundos
+setInterval(() => {
+  mostrarVista(vistaActual === 0 ? 1 : 0);
+}, 15000);
 /* =========================
    ROTACIÓN KPI
 ========================= */
