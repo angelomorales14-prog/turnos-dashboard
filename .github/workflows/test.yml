@@ -1,13 +1,12 @@
 name: Test Ventilacion
 
 on:
-workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
 test:
 runs-on: ubuntu-latest
 
-```
 steps:
 
   - name: Descargar HTML
@@ -53,4 +52,3 @@ steps:
     run: |
       echo "=== TABLA HORARIA ==="
       grep -A 100 -B 20 "13:00" ventilacion.html
-```
