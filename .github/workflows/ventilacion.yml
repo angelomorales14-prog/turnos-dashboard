@@ -39,6 +39,12 @@ jobs:
 
           lineas = [x.strip() for x in texto.splitlines() if x.strip()]
 
+          for i, linea in enumerate(lineas):
+              if "Condición de ventilación" in linea:
+                  print("\n=== BLOQUE ENCONTRADO ===")
+                  for x in lineas[i:i+80]:
+                      print(x)
+
           # Hora actual Chile
           ahora = datetime.now(ZoneInfo("America/Santiago"))
           hora_actual = ahora.strftime("%H:00")
