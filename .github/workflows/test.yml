@@ -15,3 +15,7 @@ jobs:
       - name: Buscar ventilacion horaria
         run: |
           grep -oE '[0-9]{2}:[0-9]{2}' ventilacion.html | head -50
+
+      - name: Buscar bloque ventilacion
+        run: |
+          grep -A 80 -B 20 "13:00" ventilacion.html
