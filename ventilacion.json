@@ -1,7 +1,6 @@
 {
-  "fecha_pronostico": "09 de Junio de 2026",
-  "hora_pronostico": "13:00",
-  "codigo": "R",
-  "estado": "REGULAR",
-  "actualizado": "10-06-2026 11:01"
+  "hora_actual": "11:00",
+  "codigo": null,
+  "estado": "SIN DATOS",
+  "actualizado": "10-06-2026 11:09"
 }
