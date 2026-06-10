@@ -27,6 +27,7 @@ jobs:
           import requests
           from bs4 import BeautifulSoup
           from datetime import datetime
+          from zoneinfo import ZoneInfo
 
           url = "https://airecqp.mma.gob.cl/pronostico-de-ventilacion/"
 
@@ -76,7 +77,9 @@ jobs:
               "hora_pronostico": hora_pronostico,
               "codigo": codigo,
               "estado": estados.get(codigo, "DESCONOCIDO"),
-              "actualizado": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+              "actualizado": datetime.now(
+                  ZoneInfo("America/Santiago")
+              ).strftime("%d-%m-%Y %H:%M")
           }
 
           with open("ventilacion.json", "w", encoding="utf-8") as f:
