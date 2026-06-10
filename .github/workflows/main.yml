@@ -1,84 +1,84 @@
 name: Actualizar Ventilacion
 
 on:
-  schedule:
-  - cron: '*/30 * * * *'
-  workflow_dispatch:
+schedule:
+- cron: '*/30 * * * *'
+workflow_dispatch:
 
 permissions:
-  contents: write
+contents: write
 
 jobs:
-  ventilacion:
-    runs-on: ubuntu-latest
+ventilacion:
+runs-on: ubuntu-latest
 
-  steps:
+steps:
 
-      - name: Checkout
-        uses: actions/checkout@v4
+  - name: Checkout
+    uses: actions/checkout@v4
 
-      - name: Instalar dependencias
-        run: |
-          pip install beautifulsoup4 lxml
+  - name: Instalar dependencias
+    run: |
+      pip install beautifulsoup4 lxml
 
-      - name: Obtener ventilacion
-        run: |
-          python3 << 'EOF'
-          import requests
-          import json
-          from bs4 import BeautifulSoup
+  - name: Obtener ventilacion
+    run: |
+      python3 << 'EOF'
+      import requests
+      import json
+      from bs4 import BeautifulSoup
 
-          url = "https://airecqp.mma.gob.cl/pronostico-de-ventilacion/"
+      url = "https://airecqp.mma.gob.cl/pronostico-de-ventilacion/"
 
-          html = requests.get(url, timeout=30).text
+      html = requests.get(url, timeout=30).text
 
-          soup = BeautifulSoup(html, "lxml")
+      soup = BeautifulSoup(html, "lxml")
 
-          texto = soup.get_text("\n", strip=True)
+      texto = soup.get_text("\n", strip=True)
 
-          lineas = [l.strip() for l in texto.splitlines() if l.strip()]
+      lineas = [l.strip() for l in texto.splitlines() if l.strip()]
 
-          idx = lineas.index("Condición de ventilación")
+      idx = lineas.index("Condición de ventilación")
 
-          hora = None
-          codigo = None
+      hora = None
+      codigo = None
 
-          for i in range(idx, len(lineas)):
+      for i in range(idx, len(lineas)):
 
-            if lineas[i] == "Hora":
-                hora = lineas[i + 1]
+          if lineas[i] == "Hora":
+              hora = lineas[i + 1]
 
-            if lineas[i] == "Condición":
-                codigo = lineas[i + 1]
-                break
+          if lineas[i] == "Condición":
+              codigo = lineas[i + 1]
+              break
 
-          estados = {
-            "B": "BUENA",
-            "R": "REGULAR",
-            "M": "MALA"
-          }
+      estados = {
+          "B": "BUENA",
+          "R": "REGULAR",
+          "M": "MALA"
+      }
 
-          resultado = {
-            "hora": hora,
-            "codigo": codigo,
-            "estado": estados.get(codigo, "DESCONOCIDO")
-          }
+      resultado = {
+          "hora": hora,
+          "codigo": codigo,
+          "estado": estados.get(codigo, "DESCONOCIDO")
+      }
 
-        with open("ventilacion.json", "w", encoding="utf-8") as f:
-            json.dump(resultado, f, indent=2, ensure_ascii=False)
+      with open("ventilacion.json", "w", encoding="utf-8") as f:
+          json.dump(resultado, f, indent=2, ensure_ascii=False)
 
-          print(resultado)
+      print(resultado)
 
-          EOF
+      EOF
 
-      - name: Commit y Push
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+  - name: Commit y Push
+    run: |
+      git config user.name "github-actions[bot]"
+      git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add ventilacion.json
+      git add ventilacion.json
 
-          if ! git diff --cached --quiet; then
-            git commit -m "Actualizar ventilacion"
-            git push
-        fi
+      if ! git diff --cached --quiet; then
+        git commit -m "Actualizar ventilacion"
+        git push
+      fi
