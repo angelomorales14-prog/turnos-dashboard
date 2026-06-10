@@ -55,49 +55,22 @@ jobs:
           horas = []
           condiciones = []
 
-          # Extraer horas
-          for i in range(idx, len(lineas)):
-              if lineas[i] == "Hora":
-                  j = i + 1
+          for i, linea in enumerate(lineas):
 
-                  while j < len(lineas):
-                      valor = lineas[j]
+              # Capturar todas las horas
+              if len(linea) == 5 and ":" in linea:
+                  horas.append(linea)
 
-                      if valor == "Condición":
-                          break
-
-                      if ":" in valor:
-                          horas.append(valor)
-
-                      j += 1
-
-                  break
-
-          # Extraer condiciones
-          for i in range(idx, len(lineas)):
-              if lineas[i] == "Condición":
-
-                  j = i + 1
-
-                  while j < len(lineas):
-
-                      valor = lineas[j]
-
-                      if valor == "Condición de ventilación":
-                          break
-
-                      if valor in ["B", "R", "M"]:
-                          condiciones.append(valor)
-
-                      j += 1
-
-                  break
+              # Capturar todos los códigos B/R/M
+              if linea in ["B", "R", "M"]:
+                  condiciones.append(linea)
 
           print("HORAS:")
           print(horas)
 
           print("CONDICIONES:")
           print(condiciones)
+
 
           print("TOTAL LINEAS:", len(lineas))
 
@@ -106,6 +79,9 @@ jobs:
                   print(l)
 
           tabla = dict(zip(horas, condiciones))
+
+          print("TABLA:")
+          print(tabla)
 
           codigo = tabla.get(hora_actual)
 
