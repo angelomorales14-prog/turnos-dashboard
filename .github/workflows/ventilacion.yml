@@ -39,32 +39,57 @@ jobs:
 
           lineas = [x.strip() for x in texto.splitlines() if x.strip()]
 
-          fecha_pronostico = ""
-          hora_pronostico = ""
-          codigo = ""
+          # Hora actual Chile
+          ahora = datetime.now(ZoneInfo("America/Santiago"))
+          hora_actual = ahora.strftime("%H:00")
 
-          for i, linea in enumerate(lineas):
+          # Buscar primer bloque de ventilación
+          idx = lineas.index("Condición de ventilación")
 
-              if linea == "Fecha:" and i + 1 < len(lineas):
-                  fecha_pronostico = lineas[i + 1]
+          horas = []
+          condiciones = []
 
-              if linea == "Hora:" and i + 1 < len(lineas):
-                  hora_pronostico = lineas[i + 1].replace(" Horas", "")
+          # Extraer horas
+          for i in range(idx, len(lineas)):
+              if lineas[i] == "Hora":
+                  j = i + 1
 
-          for i, linea in enumerate(lineas):
+                  while j < len(lineas):
+                      valor = lineas[j]
 
-              if linea == "Condición de ventilación":
+                      if valor == "Condición":
+                          break
 
-                  try:
-                      idx_condicion = lineas.index("Condición", i)
+                      if ":" in valor:
+                          horas.append(valor)
 
-                      if idx_condicion + 1 < len(lineas):
-                          codigo = lineas[idx_condicion + 1]
+                      j += 1
 
-                      break
+                  break
 
-                  except Exception:
-                      pass
+          # Extraer condiciones
+          for i in range(idx, len(lineas)):
+              if lineas[i] == "Condición":
+
+                  j = i + 1
+
+                  while j < len(lineas):
+
+                      valor = lineas[j]
+
+                      if valor == "Condición de ventilación":
+                          break
+
+                      if valor in ["B", "R", "M"]:
+                          condiciones.append(valor)
+
+                      j += 1
+
+                  break
+
+          tabla = dict(zip(horas, condiciones))
+
+          codigo = tabla.get(hora_actual)
 
           estados = {
               "B": "BUENA",
@@ -73,13 +98,10 @@ jobs:
           }
 
           resultado = {
-              "fecha_pronostico": fecha_pronostico,
-              "hora_pronostico": hora_pronostico,
+              "hora_actual": hora_actual,
               "codigo": codigo,
-              "estado": estados.get(codigo, "DESCONOCIDO"),
-              "actualizado": datetime.now(
-                  ZoneInfo("America/Santiago")
-              ).strftime("%d-%m-%Y %H:%M")
+              "estado": estados.get(codigo, "SIN DATOS"),
+              "actualizado": ahora.strftime("%d-%m-%Y %H:%M")
           }
 
           with open("ventilacion.json", "w", encoding="utf-8") as f:
