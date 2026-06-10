@@ -12,62 +12,35 @@ jobs:
       run: |
         curl -L "https://airecqp.mma.gob.cl/pronostico-de-ventilacion/" -o ventilacion.html
 
-    - name: Tamaño archivo
+    - name: Instalar dependencias
       run: |
-        echo "=== TAMAÑO HTML ==="
-        wc -c ventilacion.html
+        pip install beautifulsoup4 lxml
 
-    - name: Primeras 200 lineas
+    - name: Extraer texto visible
       run: |
-        echo "=== HEAD HTML ==="
-        head -200 ventilacion.html
+        python3 << 'EOF'
+        from bs4 import BeautifulSoup
 
-    - name: Buscar horas
-      run: |
-        echo "=== HORAS ENCONTRADAS ==="
-        grep -oE '[0-9]{2}:[0-9]{2}' ventilacion.html | sort | uniq
+        with open("ventilacion.html", "r", encoding="utf-8", errors="ignore") as f:
+            html = f.read()
 
-    - name: Buscar ventilacion
-      run: |
-        echo "=== VENTILACION ==="
-        grep -i -n "ventil" ventilacion.html | head -200 || true
+        soup = BeautifulSoup(html, "lxml")
 
-    - name: Buscar scripts externos
-      run: |
-        echo "=== SCRIPTS ==="
-        grep -oE 'src="[^"]+"' ventilacion.html | sort | uniq || true
+        texto = soup.get_text("\n", strip=True)
 
-    - name: Buscar JSON API AJAX
-      run: |
-        echo "=== JSON AJAX API ==="
-        grep -i -n "json\|ajax\|fetch\|api\|xmlhttprequest" ventilacion.html | head -200 || true
+        print("========== TEXTO EXTRAIDO ==========")
 
-    - name: Buscar tablas
-      run: |
-        echo "=== TABLE ==="
-        grep -i -n "<table" ventilacion.html | head -100 || true
+        lineas = texto.splitlines()
 
-    - name: Buscar SVG
-      run: |
-        echo "=== SVG ==="
-        grep -i -n "<svg" ventilacion.html | head -100 || true
+        for i, linea in enumerate(lineas):
+            if "13:00" in linea:
+                inicio = max(0, i - 20)
+                fin = min(len(lineas), i + 80)
 
-    - name: Buscar Canvas
-      run: |
-        echo "=== CANVAS ==="
-        grep -i -n "<canvas" ventilacion.html | head -100 || true
+                print("\n===== CONTEXTO ENCONTRADO =====\n")
 
-    - name: Buscar Imagenes
-      run: |
-        echo "=== IMG ==="
-        grep -oE 'src="[^"]+\.(png|jpg|jpeg|gif|webp)"' ventilacion.html | sort | uniq || true
+                for x in lineas[inicio:fin]:
+                    print(x)
 
-    - name: Descargar JS principal
-      run: |
-        curl -L "https://airecqp.mma.gob.cl/wp-content/uploads/essential-addons-elementor/eael-9322.js" -o eael.js || true
-
-    - name: Buscar datos en JS
-      run: |
-        echo "=== JS ==="
-        grep -i -n "ventil\|json\|api\|ajax\|hora\|13:00" eael.js | head -200 || true
-   
+                break
+        EOF
