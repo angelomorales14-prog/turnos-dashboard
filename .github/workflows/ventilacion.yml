@@ -99,6 +99,12 @@ jobs:
           print("CONDICIONES:")
           print(condiciones)
 
+          print("TOTAL LINEAS:", len(lineas))
+
+          for l in lineas:
+              if ":" in l or l in ["B", "R", "M"]:
+                  print(l)
+
           tabla = dict(zip(horas, condiciones))
 
           codigo = tabla.get(hora_actual)
