@@ -1,6 +1,5 @@
 {
-  "estado": "REGULAR",
-  "codigo": "R",
   "hora": "13:00",
-  "fecha": "08-06-26"
+  "codigo": "R",
+  "estado": "REGULAR"
 }
