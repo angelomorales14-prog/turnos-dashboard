@@ -87,6 +87,12 @@ jobs:
 
                   break
 
+          print("HORAS:")
+          print(horas)
+
+          print("CONDICIONES:")
+          print(condiciones)
+
           tabla = dict(zip(horas, condiciones))
 
           codigo = tabla.get(hora_actual)
