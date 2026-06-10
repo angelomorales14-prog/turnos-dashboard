@@ -4,51 +4,50 @@ on:
   workflow_dispatch:
 
 jobs:
-test:
-runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest
 
-steps:
+    steps:
+    - name: Descargar HTML
+      run: |
+        curl -L "https://airecqp.mma.gob.cl/pronostico-de-ventilacion/" -o ventilacion.html
 
-  - name: Descargar HTML
-    run: |
-      curl -L "https://airecqp.mma.gob.cl/pronostico-de-ventilacion/" -o ventilacion.html
+    - name: Tamaño archivo
+      run: |
+        echo "=== TAMAÑO HTML ==="
+        wc -c ventilacion.html
 
-  - name: Tamaño archivo
-    run: |
-      echo "=== TAMAÑO HTML ==="
-      wc -c ventilacion.html
+    - name: Primeras 300 lineas
+      run: |
+        echo "=== HEAD HTML ==="
+        head -300 ventilacion.html
 
-  - name: Primeras 300 lineas
-    run: |
-      echo "=== HEAD HTML ==="
-      head -300 ventilacion.html
+    - name: Buscar horas
+      run: |
+        echo "=== HORAS ENCONTRADAS ==="
+        grep -oE '[0-9]{2}:[0-9]{2}' ventilacion.html | sort | uniq
 
-  - name: Buscar horas
-    run: |
-      echo "=== HORAS ENCONTRADAS ==="
-      grep -oE '[0-9]{2}:[0-9]{2}' ventilacion.html | sort | uniq
+    - name: Buscar ventilacion
+      run: |
+        echo "=== VENTILACION ==="
+        grep -i -n "ventil" ventilacion.html | head -200
 
-  - name: Buscar ventilacion
-    run: |
-      echo "=== VENTILACION ==="
-      grep -i -n "ventil" ventilacion.html | head -200
+    - name: Buscar scripts externos
+      run: |
+        echo "=== SCRIPTS ==="
+        grep -oE 'src="[^"]+"' ventilacion.html | sort | uniq
 
-  - name: Buscar scripts externos
-    run: |
-      echo "=== SCRIPTS ==="
-      grep -oE 'src="[^"]+"' ventilacion.html | sort | uniq
+    - name: Buscar JSON API AJAX
+      run: |
+        echo "=== JSON AJAX API ==="
+        grep -i -n "json\|ajax\|fetch\|api\|xmlhttprequest" ventilacion.html | head -200
 
-  - name: Buscar JSON API AJAX
-    run: |
-      echo "=== JSON AJAX API ==="
-      grep -i -n "json\|ajax\|fetch\|api\|xmlhttprequest" ventilacion.html | head -200
+    - name: Buscar letras B R M
+      run: |
+        echo "=== B R M ==="
+        grep -nE '>B<|>R<|>M<' ventilacion.html | head -200
 
-  - name: Buscar letras B R M
-    run: |
-      echo "=== B R M ==="
-      grep -nE '>B<|>R<|>M<' ventilacion.html | head -200
-
-  - name: Buscar tabla horaria
-    run: |
-      echo "=== TABLA HORARIA ==="
-      grep -A 100 -B 20 "13:00" ventilacion.html
+    - name: Buscar tabla horaria
+      run: |
+        echo "=== TABLA HORARIA ==="
+        grep -A 100 -B 20 "13:00" ventilacion.html
