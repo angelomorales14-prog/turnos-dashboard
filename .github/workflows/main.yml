@@ -23,9 +23,10 @@ jobs:
       - name: Obtener ventilacion
         run: |
           python3 << 'EOF'
-          import requests
           import json
+          import requests
           from bs4 import BeautifulSoup
+          from datetime import datetime
 
           url = "https://airecqp.mma.gob.cl/pronostico-de-ventilacion/"
 
@@ -35,21 +36,34 @@ jobs:
 
           texto = soup.get_text("\n", strip=True)
 
-          lineas = [l.strip() for l in texto.splitlines() if l.strip()]
+          lineas = [x.strip() for x in texto.splitlines() if x.strip()]
 
-          idx = lineas.index("Condición de ventilación")
+          fecha_pronostico = ""
+          hora_pronostico = ""
+          codigo = ""
 
-          hora = None
-          codigo = None
+          for i, linea in enumerate(lineas):
 
-          for i in range(idx, len(lineas)):
+              if linea == "Fecha:" and i + 1 < len(lineas):
+                  fecha_pronostico = lineas[i + 1]
 
-              if lineas[i] == "Hora":
-                  hora = lineas[i + 1]
+              if linea == "Hora:" and i + 1 < len(lineas):
+                  hora_pronostico = lineas[i + 1].replace(" Horas", "")
 
-              if lineas[i] == "Condición":
-                  codigo = lineas[i + 1]
-                  break
+          for i, linea in enumerate(lineas):
+
+              if linea == "Condición de ventilación":
+
+                  try:
+                      idx_condicion = lineas.index("Condición", i)
+
+                      if idx_condicion + 1 < len(lineas):
+                          codigo = lineas[idx_condicion + 1]
+
+                      break
+
+                  except Exception:
+                      pass
 
           estados = {
               "B": "BUENA",
@@ -58,16 +72,17 @@ jobs:
           }
 
           resultado = {
-              "hora": hora,
+              "fecha_pronostico": fecha_pronostico,
+              "hora_pronostico": hora_pronostico,
               "codigo": codigo,
-              "estado": estados.get(codigo, "DESCONOCIDO")
+              "estado": estados.get(codigo, "DESCONOCIDO"),
+              "actualizado": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
           }
 
           with open("ventilacion.json", "w", encoding="utf-8") as f:
               json.dump(resultado, f, indent=2, ensure_ascii=False)
 
-          print(resultado)
-
+          print(json.dumps(resultado, indent=2, ensure_ascii=False))
           EOF
 
       - name: Commit y Push
@@ -80,4 +95,6 @@ jobs:
           if ! git diff --cached --quiet; then
             git commit -m "Actualizar ventilacion"
             git push
+          else
+            echo "Sin cambios"
           fi
