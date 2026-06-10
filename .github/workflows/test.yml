@@ -56,3 +56,7 @@ jobs:
       run: |
         grep -A 40 -B 10 "13:00" ventilacion.html > bloque.txt
         cat bloque.txt
+
+    - name: Extraer condicion ventilacion
+      run: |
+        grep -A 30 "Condición de ventilación" ventilacion.html
