@@ -498,11 +498,6 @@ iframe {
         <div class="inversion-titulo">Cond. Ventilación</div>
         <div class="inversion-separador"></div>
         <div class="inversion-campo">
-          <div class="inversion-campo-label">Código</div>
-          <div class="inversion-campo-valor" id="ventilacionCodigo">--</div>
-        </div>
-        <div class="inversion-separador"></div>
-        <div class="inversion-campo">
           <div class="inversion-campo-label">Estado</div>
           <div class="inversion-estado-badge sin-inversion" id="ventilacionEstado">--</div>
         </div>
@@ -706,7 +701,6 @@ function poblarInversion(data) {
 
 function poblarVentilacion(data) {
   try {
-    document.getElementById("ventilacionCodigo").innerText = data.codigo || "--";
     var el = document.getElementById("ventilacionEstado");
     el.innerText = data.estado || "--";
     var cod = (data.codigo || "").toUpperCase();
