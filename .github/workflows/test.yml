@@ -51,3 +51,8 @@ jobs:
       run: |
         echo "=== TABLA HORARIA ==="
         grep -A 100 -B 20 "13:00" ventilacion.html
+
+     - name: Extraer bloque 13:00
+      run: |
+        grep -A 40 -B 10 "13:00" ventilacion.html > bloque.txt
+        cat bloque.txt
