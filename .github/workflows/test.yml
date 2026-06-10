@@ -18,4 +18,4 @@ jobs:
 
       - name: Buscar bloque ventilacion
         run: |
-          grep -A 80 -B 20 "13:00" ventilacion.html
+          grep -n "B\|R\|M" ventilacion.html | head -100
