@@ -1,7 +1,7 @@
 {
-  "delta": 2.3,
-  "estado": "CON INVERSION",
-  "inversion": true,
-  "hora": "10:00",
+  "delta": -0.5,
+  "estado": "SIN INVERSION",
+  "inversion": false,
+  "hora": "13:00",
   "fecha": "23-06-26"
 }
