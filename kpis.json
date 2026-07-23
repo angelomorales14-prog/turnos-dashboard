@@ -1,12 +1,12 @@
 [
   {
     "nombre": "% Cumplimiento Volúmen",
-    "valor": 100,
-    "periodo": "P7 02 de JuLio"
+    "valor": 0,
+    "periodo": "P7 15 de JuLio"
   },
   {
     "nombre": "% Cumplimiento Faenas",
-    "valor": 50,
-    "periodo": "P7 02 de JuLio"
+    "valor": 0,
+    "periodo": "P7 15 de JuLio"
   }
 ]
